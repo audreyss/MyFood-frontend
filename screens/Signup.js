@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   TextInput,
   TouchableOpacity,
@@ -6,8 +7,34 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import { login, logout } from "../reducers/user";
+import { useDispatch } from "react-redux";
 
-export default function Signup() {
+export default function Signup({ navigation }) {
+  const dispatch = useDispatch();
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const addUser = () => {
+    fetch("http://192.168.1.192:3000/users/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(login({ username, email, token: data.token }));
+          setUsername("");
+          setEmail("");
+          setPassword("");
+          navigation.navigate("Restriction");
+        }
+      });
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -17,11 +44,30 @@ export default function Signup() {
       <Text style={styles.text}>
         Ceate an account to save your restrictions and favorite recipe !
       </Text>
-      <TextInput style={styles.input} placeholder="Username"></TextInput>
-      <TextInput style={styles.input} placeholder="Email"></TextInput>
-      <TextInput style={styles.input} placeholder="Password"></TextInput>
-      <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-        <Text style={styles.textButton}>Enregister</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        onChangeText={(value) => setUsername(value)}
+        value={username}
+      ></TextInput>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        onChangeText={(value) => setEmail(value)}
+        value={email}
+      ></TextInput>
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        onChangeText={(value) => setPassword(value)}
+        value={password}
+      ></TextInput>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.button}
+        onPress={() => addUser()}
+      >
+        <Text style={styles.textButton}>Register</Text>
       </TouchableOpacity>
     </View>
   );

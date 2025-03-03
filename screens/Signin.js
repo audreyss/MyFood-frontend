@@ -1,15 +1,41 @@
+import { useState } from "react";
 import { TextInput, TouchableOpacity, View, Text, StyleSheet, Link } from "react-native";
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/user";
 
 export default function Signin({ navigation }) {
+
+    const dispatch = useDispatch();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleConnection = () => {
+        fetch('http://192.168.1.192:3000/users/signin', {
+            method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email, password }),
+        }).then(response => response.json())
+        .then(data => {
+            if (data.result) {
+                console.log(data)
+                dispatch(login({ email, password }));
+                setEmail('');
+                setPassword('')
+                navigation.navigate('Restriction')
+            }
+        })
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>MyFood</Text>
             <Text style={styles.connectionText}>Connection</Text>
             <Text style={styles.text}>Set your email and password</Text>
-            <TextInput placeholder="Email" style={styles.input}></TextInput>
-            <TextInput placeholder="Password" style={styles.input}></TextInput>
+            <TextInput placeholder="Email" style={styles.input} onChangeText={(value) => setEmail(value)} value={email}></TextInput>
+            <TextInput placeholder="Password" style={styles.input} onChangeText={(value) => setPassword(value)} value={password}></TextInput>
             <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-                <Text style={styles.textButton} onPress={() => navigation.navigate('Restriction')}>Connection</Text>
+                <Text style={styles.textButton} onPress={() => handleConnection()}>Connect</Text>
             </TouchableOpacity>
             <View style={styles.link}>
             <TouchableOpacity >
