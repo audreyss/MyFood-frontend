@@ -29,6 +29,11 @@ export default function App() {
       <Stack.Screen name="Signin" component={Signin} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Restriction" component={Restriction} />
+      <Stack.Screen name="Regime" component={Regime} />
+      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Recipe" component={Recipe} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Settings" component={Settings} />
     </Stack.Navigator>
   </NavigationContainer>
   </PersistGate>
