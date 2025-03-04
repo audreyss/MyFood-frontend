@@ -26,10 +26,10 @@ const persistConfig = { key: 'MyFood', storage };
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
- });
- const persistor = persistStore(store);
+});
+const persistor = persistStore(store);
 
- const TabNavigator = () => {
+const TabNavigator = () => {
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
@@ -52,24 +52,24 @@ const store = configureStore({
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
- }
+}
 
 export default function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-    <NavigationContainer>
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Signin" component={Signin} />
-      <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="Restriction" component={Restriction} />
-      <Stack.Screen name="TabNavigator" component={TabNavigator} />
-      <Stack.Screen name="Recipe" component={Recipe} />
-      <Stack.Screen name="Settings" component={Settings} />
-    </Stack.Navigator>
-  </NavigationContainer>
-  </PersistGate>
-  </Provider>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Signin" component={Signin} />
+            <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="Restriction" component={Restriction} />
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            <Stack.Screen name="Recipe" component={Recipe} />
+            <Stack.Screen name="Settings" component={Settings} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
 

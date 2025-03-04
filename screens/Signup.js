@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   Image,
+  Alert
 } from "react-native";
 import { login } from "../reducers/user";
 import { useDispatch } from "react-redux";
@@ -17,8 +18,14 @@ export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const createAlert = (alertMsg) => {
+    Alert.alert('Error', alertMsg, [
+      { text: 'OK' },
+    ]);
+  };
+
   const addUser = () => {
-    fetch("http://192.168.1.192:3000/users/signup", {
+    fetch("http://192.168.1.14:3000/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),
@@ -31,7 +38,13 @@ export default function Signup({ navigation }) {
           setEmail("");
           setPassword("");
           navigation.navigate("Restriction");
-        }
+        } else {
+					if (typeof data.error == "object") {
+						createAlert(data.error[0].msg);
+					} else {
+						createAlert(data.error);
+					}					
+				}
       });
   };
 
@@ -42,7 +55,7 @@ export default function Signup({ navigation }) {
         source={require("../assets/bonhome.jpg")}
       ></Image>
       <Text style={styles.text}>
-        Ceate an account to save your restrictions and favorite recipe !
+        Ceate an account to save your restrictions and favorite recipes!
       </Text>
       <TextInput
         style={styles.input}
@@ -55,12 +68,15 @@ export default function Signup({ navigation }) {
         placeholder="Email"
         onChangeText={(value) => setEmail(value)}
         value={email}
+        keyboardType="email-address"
       ></TextInput>
       <TextInput
         style={styles.input}
         placeholder="Password"
         onChangeText={(value) => setPassword(value)}
         value={password}
+        secureTextEntry={true}
+        autoCapitalize={"none"}
       ></TextInput>
       <TouchableOpacity
         activeOpacity={0.8}
