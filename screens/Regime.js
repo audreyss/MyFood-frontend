@@ -5,7 +5,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 export default function Regime({ navigation, route }) {
     const [isActive, setIsActive] = useState(true);
     const { diet, dietIcons } = route.params;
-    console.log(diet);
 
     let yesImage = <FontAwesome name='thumbs-o-up' size={40} color='#6DCD7D' />;
     let noImage = <FontAwesome name='thumbs-o-down' size={40} color='black' />;

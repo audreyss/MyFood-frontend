@@ -26,9 +26,26 @@ export default function Restriction({ navigation }) {
     vegetarian: require("../assets/vegeterian.png")
   };
 
+  const handlePress = (diet) => {
+    fetch('http://192.168.1.14:3000' + '/users/diet/' + user.token, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ field: diet.prop }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet, dietIcons } });
+        } else {
+          // TODO
+        }
+      })
+      .catch(error => console.error(error));
+  }
+
   dietsContent = diets.map((diet, i) => {
     return (
-      <TouchableOpacity key={i} style={styles.button} onPress={() => navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet , dietIcons} })}>
+      <TouchableOpacity key={i} style={styles.button} onPress={() => handlePress(diet)}>
         <Image source={dietIcons[diet.prop]} style={{ width: 50, height: 50 }} />
         <Text style={styles.text}>{diet.name}</Text>
       </TouchableOpacity>
