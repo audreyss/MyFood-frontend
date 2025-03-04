@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    margin: 20,
+    marginTop: '20%',
   },
   title: {
     fontSize: 100,
@@ -56,25 +56,23 @@ const styles = StyleSheet.create({
   },
   allButtons: {
     alignItems: "center",
-    width: "80%",
-    // display: "flex",
+    width: '100%'
   },
   button: {
-    display: "flex",
     alignItems: "center",
     padding: 10,
-    width: "100%",
+    width: "80%",
     backgroundColor: "#33652C",
     borderRadius: 5,
     margin: 8,
     flexDirection: "row",
-    // justifyContent: "center",
   },
   text: {
+    flex: 1,
     color: "white",
     fontFamily: "Inter",
-    display: "flex",
-    paddingLeft: "25%",
+    textAlign: 'center',
+    paddingRight: 35,
   },
   logoSize: {
     width: 50,

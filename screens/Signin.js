@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, Link } from "react-native";
+import { TextInput, TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
 import { login } from "../reducers/user";
 
