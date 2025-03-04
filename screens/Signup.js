@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { login, logout } from "../reducers/user";
+import { login } from "../reducers/user";
 import { useDispatch } from "react-redux";
 
 export default function Signup({ navigation }) {
@@ -26,7 +26,7 @@ export default function Signup({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(login({ username, email, token: data.token }));
+          dispatch(login({ username: data.username, token: data.token }));
           setUsername("");
           setEmail("");
           setPassword("");

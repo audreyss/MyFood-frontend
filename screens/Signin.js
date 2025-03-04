@@ -19,7 +19,7 @@ export default function Signin({ navigation }) {
         .then(data => {
             if (data.result) {
                 console.log(data)
-                dispatch(login({ email, password }));
+                dispatch(login({ token: data.token, username: data.username }));
                 setEmail('');
                 setPassword('')
                 navigation.navigate('Restriction')
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
         fontSize: 80,
         fontWeight: 'bold',
         fontFamily: 'inter',
-        textShadowColor: '#000',
+        textShadowColor: 'green',
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 10,
         margin: 50,

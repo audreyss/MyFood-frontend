@@ -1,17 +1,31 @@
-import React from "react";
+import React, { use } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function Restriction({ navigation }) {
+
+  const username = useSelector((state) => state.user.value.username);
+  const user = useSelector((state) => state.user.value);
+
+  const connected = () => {
+    if (!user.token) {
+      return <Text style={styles.title}>What are your dietary preferences?</Text>
+      ;
+    } else {
+      return <Text style={styles.title}>Welcome <Text style={styles.username}>{username}</Text>, what are your dietary preferences?</Text>;
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
         <Image source={require("../assets/restriction-logo.png")} />
       </View>
-      <View style={styles.title}>
-        <Text>What are your dietary preferences?</Text>
+      <View >
+      {connected()}
       </View>
       <View style={styles.allButtons}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TabNavigator')}>
           <Image source={require("../assets/barbell.png")} />
           <Text style={styles.text}>Muscle gain</Text>
         </TouchableOpacity>
@@ -51,8 +65,16 @@ const styles = StyleSheet.create({
     marginTop: '20%',
   },
   title: {
-    fontSize: 100,
+    fontFamily: 'inter',
+    fontSize: 16,
+    fontWeight: 'medium',
     margin: 60,
+    textAlign: 'center',
+  },
+  username: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    fontStyle: 'italic',
   },
   allButtons: {
     alignItems: "center",
