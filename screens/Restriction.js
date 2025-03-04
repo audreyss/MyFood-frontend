@@ -3,29 +3,35 @@ import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function Restriction({ navigation }) {
-
   const username = useSelector((state) => state.user.value.username);
   const user = useSelector((state) => state.user.value);
 
   const connected = () => {
     if (!user.token) {
-      return <Text style={styles.title}>What are your dietary preferences?</Text>
-      ;
+      return (
+        <Text style={styles.title}>What are your dietary preferences?</Text>
+      );
     } else {
-      return <Text style={styles.title}>Welcome <Text style={styles.username}>{username}</Text>, what are your dietary preferences?</Text>;
+      return (
+        <Text style={styles.title}>
+          Welcome <Text style={styles.username}>{username}</Text>, what are your
+          dietary preferences?
+        </Text>
+      );
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
         <Image source={require("../assets/restriction-logo.png")} />
       </View>
-      <View >
-      {connected()}
-      </View>
+      <View>{connected()}</View>
       <View style={styles.allButtons}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TabNavigator')}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("TabNavigator")}
+        >
           <Image source={require("../assets/barbell.png")} />
           <Text style={styles.text}>Muscle gain</Text>
         </TouchableOpacity>
@@ -62,23 +68,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    marginTop: '20%',
+    marginTop: "20%",
   },
   title: {
-    fontFamily: 'inter',
+    fontFamily: "inter",
     fontSize: 16,
-    fontWeight: 'medium',
+    fontWeight: "medium",
     margin: 60,
-    textAlign: 'center',
+    textAlign: "center",
   },
   username: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 18,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   allButtons: {
     alignItems: "center",
-    width: '100%'
+    width: "100%",
   },
   button: {
     alignItems: "center",
@@ -93,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "white",
     fontFamily: "Inter",
-    textAlign: 'center',
+    textAlign: "center",
     paddingRight: 35,
   },
   logoSize: {
