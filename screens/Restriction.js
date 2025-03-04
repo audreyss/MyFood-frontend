@@ -1,16 +1,44 @@
 import React, { use } from "react";
+import { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function Restriction({ navigation }) {
-
   const username = useSelector((state) => state.user.value.username);
   const user = useSelector((state) => state.user.value);
+  const [diets, setDiets] = useState([]);
+
+  useEffect(() => {
+    fetch('http://192.168.1.14:3000' + '/diets')
+      .then(response => response.json())
+      .then(data => {
+        if (data?.result) {
+          setDiets(data.diets)
+        }
+      })
+  }, []);
+
+  const dietIcons = {
+    muscleGain: require("../assets/barbell.png"),
+    healthy: require("../assets/scale.png"),
+    glutenFree: require("../assets/no-gluten.png"),
+    pregnant: require("../assets/pregnant.png"),
+    vegetarian: require("../assets/vegeterian.png")
+  };
+
+  dietsContent = diets.map((diet, i) => {
+    return (
+      <TouchableOpacity key={i} style={styles.button} onPress={() => navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet , dietIcons} })}>
+        <Image source={dietIcons[diet.prop]} style={{ width: 50, height: 50 }} />
+        <Text style={styles.text}>{diet.name}</Text>
+      </TouchableOpacity>
+    )
+  })
 
   const connected = () => {
     if (!user.token) {
       return <Text style={styles.title}>What are your dietary preferences?</Text>
-      ;
+        ;
     } else {
       return <Text style={styles.title}>Welcome <Text style={styles.username}>{username}</Text>, what are your dietary preferences?</Text>;
     }
@@ -22,34 +50,10 @@ export default function Restriction({ navigation }) {
         <Image source={require("../assets/restriction-logo.png")} />
       </View>
       <View >
-      {connected()}
+        {connected()}
       </View>
       <View style={styles.allButtons}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TabNavigator')}>
-          <Image source={require("../assets/barbell.png")} />
-          <Text style={styles.text}>Muscle gain</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Image source={require("../assets/scale.png")} />
-          <Text style={styles.text}>Healthy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Image source={require("../assets/no-gluten.png")} />
-          <Text style={styles.text}>Gluten free</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Image
-            source={require("../assets/pregnant.png")}
-            style={styles.logoSize}
-          />
-          <Text style={styles.text}>Pregnant</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <View>
-            <Image source={require("../assets/vegeterian.png")} />
-          </View>
-          <Text style={styles.text}>Vegetarian</Text>
-        </TouchableOpacity>
+        {dietsContent}
       </View>
     </View>
   );
