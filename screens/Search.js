@@ -30,7 +30,8 @@ export default function Search({ navigation }) {
     }, []);
 
     const handlePress = (recipe) => {
-        navigation.navigate('Recipe', { recipe });
+        console.log(recipe);
+        navigation.navigate('Recipe', { id: recipe.id });
     }
 
     const recipesContent = recipes.slice(0, 10).map((recipe, i) => {
