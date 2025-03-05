@@ -1,9 +1,21 @@
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useEffect } from "react";
 
+const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 
 export default function Recipe({ navigation, route }) {
     const { recipe } = route.params;
+
+    useEffect(() => {
+            fetch(`http://${IPADRESS}:3000` + '/recipes/recipe/:id')
+                .then(response => response.json())
+                .then(data => {
+                    if (data?.result) {
+                        setRecipes(data.recipes)
+                    }
+                })
+        }, []);
 
     console.log(recipe);
 
