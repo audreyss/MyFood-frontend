@@ -3,6 +3,16 @@ import { useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from "react-redux";
 
+const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+
+const recipes = () => {
+    fetch(`http://${IPADRESS}:3000/recipes`, (req, res) => {
+        Recipe.find({ muscleGain: true })
+            .then(data => {
+                res.json(data);
+            })
+    })
+}
 
 export default function Search({ navigation }) {
     const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
