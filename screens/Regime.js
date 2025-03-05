@@ -7,15 +7,15 @@ export default function Regime({ navigation, route }) {
     const { diet, dietIcons } = route.params;
 
     let yesImage = <FontAwesome name='thumbs-o-up' size={40} color='#6DCD7D' />;
-    let noImage = <FontAwesome name='thumbs-o-down' size={40} color='black' />;
+    let noImage = <FontAwesome name='thumbs-o-down' size={40} color='grey' />;
     let content = diet.yes.map((food, i) => {
         return (<Text key={i}>{food}</Text>)
     })
     if (!isActive) {
-        yesImage = <FontAwesome name='thumbs-o-up' size={40} color='black' />;
+        yesImage = <FontAwesome name='thumbs-o-up' size={40} color='grey' />;
         noImage = <FontAwesome name='thumbs-o-down' size={40} color='#6DCD7D' />;
         content = diet.no.map((food, i) => {
-            return (<Text key={i}>{food}</Text>)
+            return (<Text key={i} style={styles.food}>{food}</Text>)
         })
     }
 
@@ -36,7 +36,7 @@ export default function Regime({ navigation, route }) {
                 </TouchableOpacity>
             </View>
             <ScrollView style={styles.alimentsList}>
-                    {content}
+                {content}
             </ScrollView>
         </View>
     )
@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
         color: 'white',
         paddingLeft: '2%',
         paddingRight: '15%',
+    },
+    food: {
+        fontFamily: 'Inter'
     },
     image: {
         width: 50,
