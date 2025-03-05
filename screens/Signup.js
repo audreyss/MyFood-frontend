@@ -25,7 +25,7 @@ export default function Signup({ navigation }) {
   };
 
   const addUser = () => {
-    fetch("http://192.168.1.14:3000/users/signup", {
+    fetch("http://192.168.1.192:3000/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),

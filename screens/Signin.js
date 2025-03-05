@@ -18,7 +18,7 @@ export default function Signin({ navigation }) {
 
 
 	const handleConnection = () => {
-		fetch('http://192.168.1.14:3000/users/signin', {
+		fetch('http://192.168.1.192:3000/users/signin', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password }),
