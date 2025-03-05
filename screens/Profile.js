@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "Inter",
     textAlign: "center",
-    paddingRight: 35,
   },
   logoSize: {
     width: 30,

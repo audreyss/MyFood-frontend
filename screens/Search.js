@@ -1,6 +1,16 @@
 import { View, Text, StyleSheet, TextInput, Image, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+
+const recipes = () => {
+    fetch(`http://${IPADRESS}:3000/recipes`, (req, res) => {
+        Recipe.find({ muscleGain: true })
+            .then(data => {
+                res.json(data);
+            })
+    })
+}
 
 export default function Search({ navigation }) {
     return (
@@ -19,82 +29,6 @@ export default function Search({ navigation }) {
             <ScrollView style={styles.container}>
                 <View style={styles.recetteContainer}>
                     <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <View style={styles.iconContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    </View>
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <View style={styles.iconContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    </View>
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <View style={styles.iconContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    </View>
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <View style={styles.iconContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    </View>
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <View style={styles.iconContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    </View>
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <View style={styles.iconContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    </View>
-                    <Text style={styles.recette}>Poulet au curry</Text>
-                    <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-                </View>
-                <View style={styles.recetteContainer}>
-                    <View style={styles.iconContainer}>
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                    </View>
                     <Text style={styles.recette}>Poulet au curry</Text>
                     <Icon name="bookmark" size={20} color="black" style={styles.icon} />
                 </View>
