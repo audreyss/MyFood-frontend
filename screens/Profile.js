@@ -1,13 +1,52 @@
-import {
-  TouchableOpacity,
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Button,
-} from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { logout } from "../reducers/user";
 
-export default function Profile({ navigation }) {
+export default function Profile() {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+  const token = useSelector((state) => state.user.token);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigation.navigate("Signin");
+  };
+
+  const handleDeleteAccount = () => {
+    // Make API call to delete the account
+    fetch(`http://${IPADRESS}:3000/users/delete`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert("Success", "Your account has been deleted.", [
+            {
+              text: "OK",
+              onPress: () => {
+                // Clear the user state
+                dispatch(logout());
+                // Navigate to the Signin page
+                navigation.navigate("Signin");
+              },
+            },
+          ]);
+        } else {
+          Alert.alert("Error", data.error);
+        }
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Error",
+          "Failed to delete account. Please try again later."
+        );
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -64,11 +103,11 @@ export default function Profile({ navigation }) {
         <TouchableOpacity style={styles.button}>
           <Text style={styles.text}>Edit my password</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleDeleteAccount}>
           <Text style={styles.text}>Delete my account</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.text}>Disconnect</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLogout}>
+          <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>
       </View>
     </View>
