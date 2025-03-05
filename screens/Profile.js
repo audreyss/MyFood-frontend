@@ -1,11 +1,4 @@
-import {
-  TouchableOpacity,
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Button,
-} from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 
 export default function Profile({ navigation }) {
   return (
@@ -134,7 +127,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "Inter",
     textAlign: "center",
-    paddingRight: 35,
   },
   logoSize: {
     width: 30,
