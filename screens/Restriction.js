@@ -1,6 +1,6 @@
 import React, { use } from "react";
 import { useState, useEffect } from "react";
-import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, Image, Alert } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function Restriction({ navigation }) {
