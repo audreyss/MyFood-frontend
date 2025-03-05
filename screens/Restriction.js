@@ -106,14 +106,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'inter',
-    fontSize: 16,
+    fontSize: 30,
     fontWeight: 'medium',
     margin: 60,
     textAlign: 'center',
+    paddingLeft: 10,
+    textShadowColor: 'green',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 1,
   },
   username: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 30,
     fontStyle: 'italic',
   },
   allButtons: {
