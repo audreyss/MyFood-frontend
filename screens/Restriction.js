@@ -1,12 +1,14 @@
 import React, { use } from "react";
 import { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image, Alert } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addDiet } from "../reducers/user";
 
 
 
 export default function Restriction({ navigation }) {
   const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+  const dispatch = useDispatch();
   const username = useSelector((state) => state.user.value.username);
   const user = useSelector((state) => state.user.value);
   const [diets, setDiets] = useState([]);
@@ -30,26 +32,34 @@ export default function Restriction({ navigation }) {
   };
 
   const createAlert = (alertMsg) => {
-      Alert.alert('Error', alertMsg, [
-        { text: 'OK' },
-      ]);
-    };
+    Alert.alert('Error', alertMsg, [
+      { text: 'OK' },
+    ]);
+  };
 
   const handlePress = (diet) => {
-    fetch(`http://${IPADRESS}:3000` + '/users/diet/' + user.token, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ field: diet.prop }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.result) {
-          navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet, dietIcons } });
-        } else {
-          createAlert(data.error);
-        }
+    console.log(user);
+    if (!user.token) {
+      dispatch(addDiet(diet.prop));
+      navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet, dietIcons } });
+    } else {
+      fetch(`http://${IPADRESS}:3000` + '/users/diet/' + user.token, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ field: diet.prop }),
       })
-      .catch(error => console.error(error));
+        .then(response => response.json())
+        .then(data => {
+          if (data.result) {
+            dispatch(addDiet(diet.prop));
+            navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet, dietIcons } });
+          } else {
+            createAlert(data.error);
+          }
+        })
+        .catch(error => console.error(error));
+    }
+
   }
 
   dietsContent = diets.map((diet, i) => {
