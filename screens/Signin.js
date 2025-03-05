@@ -6,7 +6,7 @@ import { login } from "../reducers/user";
 export default function Signin({ navigation }) {
 
 	const dispatch = useDispatch();
-
+	const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
@@ -18,7 +18,8 @@ export default function Signin({ navigation }) {
 
 
 	const handleConnection = () => {
-		fetch('http://192.168.1.192:3000/users/signin', {
+		
+		fetch(`http://${IPADRESS}:3000/users/signin`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password }),

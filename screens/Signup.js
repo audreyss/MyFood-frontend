@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 
 export default function Signup({ navigation }) {
   const dispatch = useDispatch();
-
+  const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +25,7 @@ export default function Signup({ navigation }) {
   };
 
   const addUser = () => {
-    fetch("http://192.168.1.192:3000/users/signup", {
+    fetch(`http://${IPADRESS}:3000/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),
