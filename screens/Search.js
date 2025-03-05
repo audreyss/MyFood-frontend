@@ -40,14 +40,15 @@ export default function Search({ navigation }) {
     }, []);
 
     const handlePress = (recipe) => {
-        console.log(recipe);
         navigation.navigate('Recipe', { id: recipe.id });
     }
 
     const recipesContent = recipes.slice(0, 10).map((recipe, i) => {
         let icons = [];
+        let n = 0;
         for (let diet in dietIcons) {
-            if (recipe[diet]) icons.push(<Image style={styles.recipeImage} source={dietIcons[diet]} />)
+            if (recipe[diet]) icons.push(<Image key={n} style={styles.recipeImage} source={dietIcons[diet]} />)
+            n++;
         }
 
         const name = recipe.name.length > 28 ? recipe.name.slice(0, 25) + '...' : recipe.name;

@@ -1,24 +1,33 @@
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 
 export default function Recipe({ navigation, route }) {
-    const { recipe } = route.params;
+    const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+    const { id } = route.params;
+    const [recipe, setRecipe] = useState(null);
+
 
     useEffect(() => {
-            fetch(`http://${IPADRESS}:3000` + '/recipes/recipe/:id')
-                .then(response => response.json())
-                .then(data => {
-                    if (data?.result) {
-                        setRecipes(data.recipes)
-                    }
-                })
-        }, []);
+        fetch(`http://${IPADRESS}:3000` + '/recipes/recipe/' + id)
+            .then(response => response.json())
+            .then(data => {
+                if (data?.result) {
+                    setRecipe(data.recipe[0]);
+                }
+            })
+    }, []);
 
-    console.log(recipe);
 
+    if (!recipe) {
+        return (
+            <View style={styles.all}>
+                <Text style={styles.title}>Loading...</Text>
+            </View>
+        );
+    }
+    
     return (
         <View style={styles.all}>
             <ScrollView style={styles.container}>
