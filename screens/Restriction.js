@@ -3,13 +3,16 @@ import { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image, Alert } from "react-native";
 import { useSelector } from "react-redux";
 
+
+
 export default function Restriction({ navigation }) {
+  const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
   const username = useSelector((state) => state.user.value.username);
   const user = useSelector((state) => state.user.value);
   const [diets, setDiets] = useState([]);
 
   useEffect(() => {
-    fetch('http://192.168.1.14:3000' + '/diets')
+    fetch(`http://${IPADRESS}:3000` + '/diets')
       .then(response => response.json())
       .then(data => {
         if (data?.result) {
@@ -33,7 +36,7 @@ export default function Restriction({ navigation }) {
     };
 
   const handlePress = (diet) => {
-    fetch('http://192.168.1.14:3000' + '/users/diet/' + user.token, {
+    fetch(`http://${IPADRESS}:3000` + '/users/diet/' + user.token, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ field: diet.prop }),
