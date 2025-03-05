@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TextInput, Image, ScrollView, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useSelector } from "react-redux";
 
 const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 
@@ -15,7 +16,18 @@ const recipes = () => {
 
 export default function Search({ navigation }) {
     const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+    const user = useSelector((state) => state.user.value);
     const [recipes, setRecipes] = useState([]);
+    const [dietOptions, setDietOptions] = useState([]);
+
+    console.log(user);
+    const dietIcons = {
+        muscleGain: require("../assets/barbell.png"),
+        healthy: require("../assets/scale.png"),
+        glutenFree: require("../assets/no-gluten.png"),
+        pregnant: require("../assets/pregnant.png"),
+        vegetarian: require("../assets/vegeterian.png")
+    };
 
     useEffect(() => {
         fetch(`http://${IPADRESS}:3000` + '/recipes/all')
@@ -32,10 +44,18 @@ export default function Search({ navigation }) {
     }
 
     const recipesContent = recipes.slice(0, 10).map((recipe, i) => {
+        let icons = [];
+        for (let diet in dietIcons) {
+            if (recipe[diet]) icons.push(<Image style={styles.recipeImage} source={dietIcons[diet]} />)
+        }
+
+        const name = recipe.name.length > 28 ? recipe.name.slice(0, 25) + '...' : recipe.name;
         return (
             <TouchableOpacity key={i} style={styles.recetteContainer} onPress={() => handlePress(recipe)}>
-                <Image style={styles.recipeImage} source={require("../assets/barbell.png")} />
-                <Text style={styles.recette}>{recipe.name}</Text>
+                <View style={styles.iconsContainer}>
+                    {icons}
+                </View>
+                <Text style={styles.recette}>{name}</Text>
                 <Icon name="bookmark" size={20} color="black" style={styles.icon} />
             </TouchableOpacity>
         )
@@ -118,10 +138,15 @@ const styles = StyleSheet.create({
         fontWeight: 'medium',
     },
     recipeImage: {
-        width: 30,
-        height: 30,
+        width: 25,
+        height: 25,
     },
     iconContainer: {
         flexDirection: 'row',
+    },
+    iconsContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
     }
 })
