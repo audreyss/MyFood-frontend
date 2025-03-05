@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert } from "react-native";
 import { useDispatch } from "react-redux";
 import { login } from "../reducers/user";
+import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signin({ navigation }) {
 
@@ -9,6 +10,7 @@ export default function Signin({ navigation }) {
 	const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
 
 	const createAlert = (alertMsg) => {
 		Alert.alert('Error', alertMsg, [
@@ -18,7 +20,7 @@ export default function Signin({ navigation }) {
 
 
 	const handleConnection = () => {
-		
+
 		fetch(`http://${IPADRESS}:3000/users/signin`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -36,7 +38,7 @@ export default function Signin({ navigation }) {
 						createAlert(data.error[0].msg);
 					} else {
 						createAlert(data.error);
-					}					
+					}
 				}
 			})
 	}
@@ -47,7 +49,22 @@ export default function Signin({ navigation }) {
 			<Text style={styles.connectionText}>Connection</Text>
 			<Text style={styles.text}>Set your email and password</Text>
 			<TextInput placeholder="Email" style={styles.input} onChangeText={(value) => setEmail(value)} value={email} keyboardType="email-address"></TextInput>
-			<TextInput placeholder="Password" style={styles.input} onChangeText={(value) => setPassword(value)} value={password} secureTextEntry={true} autoCapitalize={"none"}></TextInput>
+			<View style={styles.passwordContainer}>
+				<TextInput
+					placeholder="Password"
+					style={styles.passwordInput}
+					onChangeText={(value) => setPassword(value)}
+					value={password}
+					secureTextEntry={!showPassword}
+					autoCapitalize={"none"}>
+				</TextInput>
+				<TouchableOpacity
+					style={styles.showPasswordButton}
+					onPress={() => setShowPassword(!showPassword)}
+				>
+					<FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="grey" />
+				</TouchableOpacity>
+			</View>
 			<TouchableOpacity activeOpacity={0.8} style={styles.button}>
 				<Text style={styles.textButton} onPress={() => handleConnection()}>Connect</Text>
 			</TouchableOpacity>
@@ -101,6 +118,24 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderStyle: 'solid',
 	},
+	passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '80%',
+        backgroundColor: 'white',
+        borderWidth: 2,
+        borderColor: '#6DCD7D',
+        borderRadius: 10,
+        margin: 10,
+		padding: 7,
+    },
+	passwordInput: {
+        flex: 1,
+        padding: 9,
+    },
+	showPasswordButton: {
+        padding: 10,
+    },
 	button: {
 		backgroundColor: '#1A6723',
 		width: '80%',
@@ -122,5 +157,4 @@ const styles = StyleSheet.create({
 		fontFamily: 'inter',
 		fontWeight: 'bold',
 	}
-
 })

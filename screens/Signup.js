@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import { login } from "../reducers/user";
 import { useDispatch } from "react-redux";
+import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signup({ navigation }) {
+  
   const dispatch = useDispatch();
   const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
   const [username, setUsername] = useState("");
