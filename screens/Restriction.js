@@ -1,10 +1,66 @@
 import React, { use } from "react";
+import { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function Restriction({ navigation }) {
   const username = useSelector((state) => state.user.value.username);
   const user = useSelector((state) => state.user.value);
+  const [diets, setDiets] = useState([]);
+
+  useEffect(() => {
+    fetch("http://192.168.1.14:3000" + "/diets")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data?.result) {
+          setDiets(data.diets);
+        }
+      });
+  }, []);
+
+  const dietIcons = {
+    muscleGain: require("../assets/barbell.png"),
+    healthy: require("../assets/scale.png"),
+    glutenFree: require("../assets/no-gluten.png"),
+    pregnant: require("../assets/pregnant.png"),
+    vegetarian: require("../assets/vegeterian.png"),
+  };
+
+  const handlePress = (diet) => {
+    fetch("http://192.168.1.14:3000" + "/users/diet/" + user.token, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ field: diet.prop }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          navigation.navigate("TabNavigator", {
+            screen: "Regime",
+            params: { diet, dietIcons },
+          });
+        } else {
+          // TODO
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
+  dietsContent = diets.map((diet, i) => {
+    return (
+      <TouchableOpacity
+        key={i}
+        style={styles.button}
+        onPress={() => handlePress(diet)}
+      >
+        <Image
+          source={dietIcons[diet.prop]}
+          style={{ width: 50, height: 50 }}
+        />
+        <Text style={styles.text}>{diet.name}</Text>
+      </TouchableOpacity>
+    );
+  });
 
   const connected = () => {
     if (!user.token) {

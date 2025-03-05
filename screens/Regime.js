@@ -1,30 +1,43 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, Touchable, TouchableOpacity, ScrollView } from "react-native";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+export default function Regime({ navigation, route }) {
+    const [isActive, setIsActive] = useState(true);
+    const { diet, dietIcons } = route.params;
 
-export default function Regime({ navigation }) {
+    let yesImage = <FontAwesome name='thumbs-o-up' size={40} color='#6DCD7D' />;
+    let noImage = <FontAwesome name='thumbs-o-down' size={40} color='black' />;
+    let content = diet.yes.map((food, i) => {
+        return (<Text key={i}>{food}</Text>)
+    })
+    if (!isActive) {
+        yesImage = <FontAwesome name='thumbs-o-up' size={40} color='black' />;
+        noImage = <FontAwesome name='thumbs-o-down' size={40} color='#6DCD7D' />;
+        content = diet.no.map((food, i) => {
+            return (<Text key={i}>{food}</Text>)
+        })
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.title}>
-            <Image source={ require('../assets/barbell.png')} ></Image>
-            <Text style={styles.text}>Muscle gain</Text>
+                <Image source={dietIcons[diet.prop]} style={styles.icon}></Image>
+                <Text style={styles.text}>{diet.name}</Text>
             </View>
             <View style={styles.onglets}>
-                <Image source={ require('../assets/like.jpg')} style={styles.image}></Image>
-                <Text style={styles.yesText} >Yes</Text>
-                <Image source={ require('../assets/dislike.jpg')} style={styles.image}></Image>
-                <Text style={styles.yesText}>No</Text>
+                <TouchableOpacity style={styles.yesNoContainer} onPress={() => setIsActive(true)}>
+                    {yesImage}
+                    <Text style={styles.yesText}>{diet.yesString}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.yesNoContainer} onPress={() => setIsActive(false)}>
+                    {noImage}
+                    <Text style={styles.yesText}>{diet.noString}</Text>
+                </TouchableOpacity>
             </View>
-            <View style={styles.alimentsList}>
-                <Text>
-                    Poulet{'\n'}{'\n'}
-                    Viande rouge{'\n'}{'\n'}
-                    Saumon{'\n'}{'\n'}
-                    Oeufs{'\n'}{'\n'}
-                    Thon{'\n'}{'\n'}
-                    Lait{'\n'}{'\n'}
-                    Avocats{'\n'}{'\n'}
-                </Text>
-            </View>
+            <ScrollView style={styles.alimentsList}>
+                    {content}
+            </ScrollView>
         </View>
     )
 }
@@ -34,6 +47,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#EDF9EF',
         alignItems: 'center',
+    },
+    icon: {
+        height: 48,
+        width: 48,
+        resizeMode: 'contain'
     },
     title: {
         flexDirection: 'row',
@@ -49,6 +67,11 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 1,
     },
+    yesNoContainer: {
+        width: '50%',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     onglets: {
         flexDirection: 'row',
         width: '100%',
@@ -57,7 +80,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     yesText: {
-        fontSize: 20,
+        marginLeft: 10,
+        fontSize: 15,
         fontWeight: 'bold',
         fontFamily: 'inter',
         color: 'white',
