@@ -1,10 +1,15 @@
 import { View, Text, StyleSheet } from "react-native";
 
 
-export default function Recipe({ navigation }) {
+export default function Recipe({ navigation, route }) {
+    const { recipe } = route.params;
+
+    console.log(recipe);
+
     return (
         <View style={styles.container}>
-            <Text>Recipe</Text>
+            <Text>{recipe.name}</Text>
+            <Text>{recipe.recipeContent}</Text>
         </View>
     )
 }
