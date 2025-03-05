@@ -13,9 +13,9 @@ export default function Restriction({ navigation }) {
       .then(response => response.json())
       .then(data => {
         if (data?.result) {
-          setDiets(data.diets)
+          setDiets(data.diets);
         }
-      })
+      });
   }, []);
 
   const dietIcons = {
@@ -23,7 +23,7 @@ export default function Restriction({ navigation }) {
     healthy: require("../assets/scale.png"),
     glutenFree: require("../assets/no-gluten.png"),
     pregnant: require("../assets/pregnant.png"),
-    vegetarian: require("../assets/vegeterian.png")
+    vegetarian: require("../assets/vegeterian.png"),
   };
 
   const handlePress = (diet) => {
@@ -32,45 +32,86 @@ export default function Restriction({ navigation }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ field: diet.prop }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.result) {
-          navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet, dietIcons } });
+          navigation.navigate("TabNavigator", {
+            screen: "Regime",
+            params: { diet, dietIcons },
+          });
         } else {
           // TODO
         }
       })
-      .catch(error => console.error(error));
-  }
+      .catch((error) => console.error(error));
+  };
 
   dietsContent = diets.map((diet, i) => {
     return (
-      <TouchableOpacity key={i} style={styles.button} onPress={() => handlePress(diet)}>
-        <Image source={dietIcons[diet.prop]} style={{ width: 50, height: 50 }} />
+      <TouchableOpacity
+        key={i}
+        style={styles.button}
+        onPress={() => handlePress(diet)}
+      >
+        <Image
+          source={dietIcons[diet.prop]}
+          style={{ width: 50, height: 50 }}
+        />
         <Text style={styles.text}>{diet.name}</Text>
       </TouchableOpacity>
-    )
-  })
+    );
+  });
 
   const connected = () => {
     if (!user.token) {
-      return <Text style={styles.title}>What are your dietary preferences?</Text>
-        ;
+      return (
+        <Text style={styles.title}>What are your dietary preferences?</Text>
+      );
     } else {
-      return <Text style={styles.title}>Welcome <Text style={styles.username}>{username}</Text>, what are your dietary preferences?</Text>;
+      return (
+        <Text style={styles.title}>
+          Welcome <Text style={styles.username}>{username}</Text>, what are your
+          dietary preferences?
+        </Text>
+      );
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
         <Image source={require("../assets/restriction-logo.png")} />
       </View>
-      <View >
-        {connected()}
-      </View>
+      <View>{connected()}</View>
       <View style={styles.allButtons}>
-        {dietsContent}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("TabNavigator")}
+        >
+          <Image source={require("../assets/barbell.png")} />
+          <Text style={styles.text}>Muscle gain</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Image source={require("../assets/scale.png")} />
+          <Text style={styles.text}>Healthy</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Image source={require("../assets/no-gluten.png")} />
+          <Text style={styles.text}>Gluten free</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Image
+            source={require("../assets/pregnant.png")}
+            style={styles.logoSize}
+          />
+          <Text style={styles.text}>Pregnant</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <View>
+            <Image source={require("../assets/vegeterian.png")} />
+          </View>
+          <Text style={styles.text}>Vegetarian</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -83,23 +124,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    marginTop: '20%',
+    marginTop: "20%",
   },
   title: {
-    fontFamily: 'inter',
+    fontFamily: "inter",
     fontSize: 16,
-    fontWeight: 'medium',
+    fontWeight: "medium",
     margin: 60,
-    textAlign: 'center',
+    textAlign: "center",
   },
   username: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 18,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   allButtons: {
     alignItems: "center",
-    width: '100%'
+    width: "100%",
   },
   button: {
     alignItems: "center",
@@ -114,7 +155,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "white",
     fontFamily: "Inter",
-    textAlign: 'center',
+    textAlign: "center",
     paddingRight: 35,
   },
   logoSize: {
