@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   TouchableOpacity,
   View,
@@ -5,6 +6,8 @@ import {
   StyleSheet,
   Image,
   Alert,
+  Modal,
+  TextInput,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -14,29 +17,94 @@ export default function Profile() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
-  const token = useSelector((state) => state.user.token);
+  const token = useSelector((state) => state.user.value.token);
+  const [modalDeleteAccount, setModalDeleteAccount] = useState(false);
+  const [modalChangeEmail, setModalChangeEmail] = useState(false);
+  const [modalChangePassword, setModalChangePassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [email, setEmail] = useState("");
 
+  {
+    /* ----------------UPDATE PASSWORD--------------- */
+  }
+  const handleUpdatePassword = () => {
+    fetch(`http://${IPADRESS}:3000/users/password/${token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ oldPassword, newPassword }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert("Success", "Your password has been updated.", [
+            {
+              text: "OK",
+            },
+          ]);
+        } else {
+          Alert.alert("Error", data.error[0].msg);
+        }
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Error",
+          "Failed to update password. Please try again later."
+        );
+      });
+  };
+  {
+    /* ----------------UPDATE EMAIL--------------- */
+  }
+
+  const handleUpdateEmail = () => {
+    fetch(`http://${IPADRESS}:3000/users/email/${token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }), // Send the new email in the request body
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert("Success", "Your email has been updated.", [
+            {
+              text: "OK", //button of confirmation
+            },
+          ]);
+        } else {
+          Alert.alert("Error", data.error[0].msg);
+        }
+      })
+      .catch((error) => {
+        Alert.alert("Error", "Failed to update email. Please try again later.");
+      });
+  };
+
+  {
+    /* ----------------LOGOUT--------------- */
+  }
   const handleLogout = () => {
     dispatch(logout());
     navigation.navigate("Signin");
   };
-
+  {
+    /* ----------------DELETE ACCOUNT--------------- */
+  }
   const handleDeleteAccount = () => {
-    // Make API call to delete the account
-    fetch(`http://${IPADRESS}:3000/users/delete`, {
+    fetch(`http://${IPADRESS}:3000/users/${token}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ password }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.result) {
           Alert.alert("Success", "Your account has been deleted.", [
             {
               text: "OK",
               onPress: () => {
-                // Clear the user state
+                // Change the user state in reducer to null
                 dispatch(logout());
                 // Navigate to the Signin page
                 navigation.navigate("Signin");
@@ -44,7 +112,7 @@ export default function Profile() {
             },
           ]);
         } else {
-          Alert.alert("Error", data.error[O].msg);
+          Alert.alert("Error", data.error[0].msg);
         }
       })
       .catch((error) => {
@@ -57,12 +125,148 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
+      {/* ----------------MODAL EDIT PASSWORD--------------- */}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalChangePassword}
+        onRequestClose={() => {
+          setModalChangePassword(!modalChangePassword);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Please enter your old password and new password to update
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Old password"
+              secureTextEntry={true}
+              onChangeText={(text) => setOldPassword(text)}
+              value={oldPassword}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="New password"
+              secureTextEntry={true}
+              onChangeText={(text) => setNewPassword(text)}
+              value={newPassword}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonCancel]}
+                onPress={() => setModalChangePassword(!modalChangePassword)}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonConfirm]}
+                onPress={() => {
+                  setModalChangePassword(!modalChangePassword);
+                  handleUpdatePassword();
+                  setOldPassword("");
+                  setNewPassword("");
+                }}
+              >
+                <Text style={styles.textStyle}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ----------------MODAL EDIT EMAIL--------------- */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalChangeEmail}
+        onRequestClose={() => {
+          setModalChangeEmail(!modalChangeEmail);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Please enter your new email to update
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="New email"
+              keyboardType="email-address"
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonCancel]}
+                onPress={() => setModalChangeEmail(!modalChangeEmail)}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonConfirm]}
+                onPress={() => {
+                  setModalChangeEmail(!modalChangeEmail);
+                  handleUpdateEmail();
+                  setEmail("");
+                }}
+              >
+                <Text style={styles.textStyle}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {/*----------- MODAL DELETE ACCOUNT----------------  */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalDeleteAccount}
+        onRequestClose={() => {
+          setModalDeleteAccount(!modalDeleteAccount);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Please enter your password to confirm
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your password"
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+              value={password}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonCancel]}
+                onPress={() => setModalDeleteAccount(!modalDeleteAccount)}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonConfirm]}
+                onPress={() => {
+                  setModalDeleteAccount(!modalDeleteAccount);
+                  handleDeleteAccount();
+                  setPassword("");
+                }}
+              >
+                <Text style={styles.textStyle}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View>
-        <Text style={styles.myProfile}>My Profile</Text>
+        <Text style={styles.myProfile}>Profile</Text>
       </View>
       <View style={styles.navBar}>
         <TouchableOpacity>
-          <Text style={styles.navBarText}>My Recipes</Text>
+          <Text style={styles.navBarText}>Saved recipes</Text>
         </TouchableOpacity>
         <TouchableOpacity>
           <Text style={[styles.navBarText, styles.activeLink]}>Settings</Text>
@@ -106,13 +310,21 @@ export default function Profile() {
       </View>
       <View style={styles.allButtons}>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.text}>Edit my mail</Text>
+          <Text style={styles.text} onPress={() => setModalChangeEmail(true)}>
+            Edit mail
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.text}>Edit my password</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setModalChangePassword(true)}
+        >
+          <Text style={styles.text}>Edit password</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleDeleteAccount}>
-          <Text style={styles.text}>Delete my account</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setModalDeleteAccount(true)}
+        >
+          <Text style={styles.text}>Delete account</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Text style={styles.text}>Logout</Text>
@@ -169,18 +381,18 @@ const styles = StyleSheet.create({
     margin: 8,
     flexDirection: "row",
   },
+  text: {
+    flex: 1,
+    color: "white",
+    fontFamily: "Inter",
+    textAlign: "center",
+  },
   dietText: {
     flex: 1,
     color: "black",
     fontFamily: "Inter",
     textAlign: "center",
     paddingRight: 35,
-  },
-  text: {
-    flex: 1,
-    color: "white",
-    fontFamily: "Inter",
-    textAlign: "center",
   },
   logoSize: {
     width: 30,
@@ -205,4 +417,102 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  input: {
+    height: 40,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingLeft: 10,
+    width: "100%",
+    border: "1px solid grey",
+  },
+  modalView: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  buttonCancel: {
+    backgroundColor: "#DDDDDD",
+    marginRight: 10,
+    flex: 1,
+  },
+  buttonConfirm: {
+    backgroundColor: "#FF0000",
+    flex: 1,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });
+
+{
+  /* <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your password"
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+              value={password}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonCancel]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonConfirm]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  handleDeleteAccount();
+                  setPassword("");
+                }}
+              >
+                <Text style={styles.textStyle}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal> */
+}
