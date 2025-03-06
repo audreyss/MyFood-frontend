@@ -9,7 +9,7 @@ export default function Search({ navigation }) {
     const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
-    
+
     const [recipes, setRecipes] = useState([]);
     const [dietOptions, setDietOptions] = useState([]);
     const [searchInput, setSearchInput] = useState('');
@@ -56,9 +56,23 @@ export default function Search({ navigation }) {
 
     const handlePressBookmark = (recipe) => {
         if (user.bookmarks.includes(recipe.id)) {
-            dispatch(removeBookmark(recipe.id));
+            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, recipe_id: recipe.id })
+            }).then(res => res.json())
+                .then(data => {
+                    data.result && dispatch(removeBookmark(recipe.id));
+                })
         } else {
-            dispatch(addBookmark(recipe.id));
+            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, recipe_id: recipe.id })
+            }).then(res => res.json())
+                .then(data => {
+                    data.result && dispatch(addBookmark(recipe.id));
+                })
         }
     }
 
@@ -68,7 +82,7 @@ export default function Search({ navigation }) {
             .map((diet, i) => (<Image key={i} style={styles.recipeImage} source={diet.img} alt={diet.name} />))
 
         const colorBookmark = user.token && user.bookmarks.includes(recipe.id) ? "#6DCD7D" : "black";
-        const bookmark = user.token ? <Icon name="bookmark" size={22} color={colorBookmark} style={styles.icon} onPress={() => handlePressBookmark(recipe)}/> : [];
+        const bookmark = user.token ? <Icon name="bookmark" size={22} color={colorBookmark} style={styles.icon} onPress={() => handlePressBookmark(recipe)} /> : [];
         const name = recipe.name.length > 25 ? recipe.name.slice(0, 22) + '...' : recipe.name;
 
         return (
@@ -86,7 +100,7 @@ export default function Search({ navigation }) {
 
     // searchIcons: array of icons jsx for search option
     const searchIcons = dietIcons.map((diet, i) => {
-        const styleIcon = dietOptions.includes(diet.name) ? {...styles.image, backgroundColor: '#6DCD7D'} : styles.image;
+        const styleIcon = dietOptions.includes(diet.name) ? { ...styles.image, backgroundColor: '#6DCD7D' } : styles.image;
 
         return (
             <TouchableOpacity key={i} onPress={() => handlePressIconSearch(diet.name)}>
