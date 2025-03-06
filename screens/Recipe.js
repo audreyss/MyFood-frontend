@@ -31,7 +31,7 @@ export default function Recipe({ navigation, route }) {
             setIsBookmarked(user.bookmarks.includes(recipe._id));
         }
     }, [recipe, user.bookmarks]);
-    
+
 
     // handlePressBookmark: handle press on bookmark icon
     const handlePressBookmark = () => {
@@ -57,6 +57,9 @@ export default function Recipe({ navigation, route }) {
     }
 
     const colorBk = isBookmarked ? "#6DCD7D" : "black";
+    const bookmark = user.token ? <Icon name="bookmark" size={30} color={colorBk} style={styles.icon} onPress={handlePressBookmark} /> : [];
+
+    const recipeContent = recipe && recipe.recipeContent.split('\n').map((instr, i) => <Text style={styles.text} key={i}>• {instr}</Text>)
 
 
     if (!recipe) {
@@ -70,16 +73,16 @@ export default function Recipe({ navigation, route }) {
     return (
         <View style={styles.all}>
             <ScrollView style={styles.container}>
-                <Icon name="bookmark" size={30} color={colorBk} style={styles.icon} onPress={handlePressBookmark} />
+                {bookmark}
                 <Text style={styles.title}>{recipe.name}</Text>
                 <View style={styles.fisrtContainer}>
                     <Image source={{ uri: recipe.picture }} style={styles.image}></Image>
                     <View style={styles.nutContainer}>
                         <Text style={styles.casesTitle}>Nutritional information :</Text>
-                        <Text style={styles.textTitle}>- calories : {recipe.calories}</Text>
-                        <Text style={styles.textTitle}>- proteins : {recipe.proteins}</Text>
-                        <Text style={styles.textTitle}>- glucides : {recipe.glucides}</Text>
-                        <Text style={styles.textTitle}>- lipides : {recipe.lipides}</Text>
+                        <Text style={styles.textTitle}>• calories : {recipe.calories}</Text>
+                        <Text style={styles.textTitle}>• proteins : {recipe.proteins}</Text>
+                        <Text style={styles.textTitle}>• glucides : {recipe.glucides}</Text>
+                        <Text style={styles.textTitle}>• lipides : {recipe.lipides}</Text>
                     </View>
                 </View>
                 <View style={styles.prepContainer}>
@@ -96,7 +99,7 @@ export default function Recipe({ navigation, route }) {
                     <Text style={styles.casesTitle}>Preparation :</Text>
                     <Text style={styles.textTitle}>Number of servings : {recipe.numberOfServings}</Text>
                     <Text style={styles.textTitle}>Ready in minutes : {recipe.readyInMinutes}</Text>
-                    <Text style={styles.text}>{recipe.recipeContent}</Text>
+                    {recipeContent}
                 </ScrollView>
             </ScrollView>
         </View>
