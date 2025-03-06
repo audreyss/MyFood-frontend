@@ -1,4 +1,11 @@
-import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { logout } from "../reducers/user";
@@ -23,6 +30,7 @@ export default function Profile() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.result) {
           Alert.alert("Success", "Your account has been deleted.", [
             {
@@ -36,7 +44,7 @@ export default function Profile() {
             },
           ]);
         } else {
-          Alert.alert("Error", data.error);
+          Alert.alert("Error", data.error[O].msg);
         }
       })
       .catch((error) => {
