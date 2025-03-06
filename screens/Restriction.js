@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     margin: 60,
     textAlign: 'center',
     paddingLeft: 10,
-    textShadowColor: 'green',
+    textShadowColor: '#B4D4B9',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 1,
   },

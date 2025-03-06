@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "inter",
     paddingLeft: 10,
-    textShadowColor: "green",
+    textShadowColor: "#B4D4B9",
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 1,
   },
