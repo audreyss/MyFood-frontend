@@ -28,9 +28,12 @@ export const userSlice = createSlice({
         },
         removeBookmark: (state, action) => {
             state.value.bookmarks = state.value.bookmarks.filter(bookmark => bookmark != action.payload);
+        },
+        importBookmarks: (state, action) => {
+            state.value.bookmarks = action.payload;
         }
     }
 })
 
-export const { login, logout, addDiet, addBookmark, removeBookmark } = userSlice.actions;
+export const { login, logout, addDiet, addBookmark, removeBookmark, importBookmarks } = userSlice.actions;
 export default userSlice.reducer;
