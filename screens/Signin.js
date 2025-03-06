@@ -28,7 +28,6 @@ export default function Signin({ navigation }) {
 		}).then(response => response.json())
 			.then(data => {
 				if (data.result) {
-					console.log('here', data, `http://${IPADRESS}:3000/bookmarks/${data.token}`);
 					fetch(`http://${IPADRESS}:3000/bookmarks/${data.token}`)
 						.then(response => response.json())
 						.then(dataBookmarks => {

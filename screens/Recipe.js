@@ -1,12 +1,19 @@
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addBookmark, removeBookmark } from "../reducers/user";
+
 
 
 export default function Recipe({ navigation, route }) {
     const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value);
+
     const { id } = route.params;
     const [recipe, setRecipe] = useState(null);
+    const [isBookmarked, setIsBookmarked] = useState(false);
 
 
     useEffect(() => {
@@ -19,6 +26,38 @@ export default function Recipe({ navigation, route }) {
             })
     }, []);
 
+    useEffect(() => {
+        if (recipe) {
+            setIsBookmarked(user.bookmarks.includes(recipe._id));
+        }
+    }, [recipe, user.bookmarks]);
+    
+
+    // handlePressBookmark: handle press on bookmark icon
+    const handlePressBookmark = () => {
+        if (user.bookmarks.includes(recipe._id)) {
+            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, recipe_id: recipe._id })
+            }).then(res => res.json())
+                .then(data => {
+                    data.result && dispatch(removeBookmark(recipe._id)) && setIsBookmarked(false);
+                })
+        } else {
+            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, recipe_id: recipe._id })
+            }).then(res => res.json())
+                .then(data => {
+                    data.result && dispatch(addBookmark(recipe._id)) && setIsBookmarked(true);
+                })
+        }
+    }
+
+    const colorBk = isBookmarked ? "#6DCD7D" : "black";
+
 
     if (!recipe) {
         return (
@@ -27,11 +66,11 @@ export default function Recipe({ navigation, route }) {
             </View>
         );
     }
-    
+
     return (
         <View style={styles.all}>
             <ScrollView style={styles.container}>
-                <Icon name="bookmark" size={30} color="black" style={styles.icon} />
+                <Icon name="bookmark" size={30} color={colorBk} style={styles.icon} onPress={handlePressBookmark} />
                 <Text style={styles.title}>{recipe.name}</Text>
                 <View style={styles.fisrtContainer}>
                     <Image source={{ uri: recipe.picture }} style={styles.image}></Image>
@@ -48,7 +87,7 @@ export default function Recipe({ navigation, route }) {
                     {recipe.ingredients.map((ingredient, i) => {
                         return (
                             <Text key={i} style={styles.ingredientText}>
-                               • {ingredient.name} {ingredient.quantity} {ingredient.unit}
+                                • {ingredient.name} {ingredient.quantity} {ingredient.unit}
                             </Text>
                         )
                     })}

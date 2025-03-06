@@ -54,6 +54,7 @@ export default function Search({ navigation }) {
         }
     };
 
+    // handlePressBookmark: handle press on bookmark icon
     const handlePressBookmark = (recipe) => {
         if (user.bookmarks.includes(recipe.id)) {
             fetch(`http://${IPADRESS}:3000/bookmarks/`, {
@@ -172,7 +173,6 @@ const styles = StyleSheet.create({
         margin: 5,
     },
     recetteContainer: {
-        width: '80%',
         alignItems: 'space-between',
         justifyContent: 'center',
         flexDirection: 'row',
