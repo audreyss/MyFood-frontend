@@ -13,12 +13,13 @@ import { useDispatch } from "react-redux";
 import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signup({ navigation }) {
-  
+
   const dispatch = useDispatch();
   const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const createAlert = (alertMsg) => {
     Alert.alert('Error', alertMsg, [
@@ -41,12 +42,12 @@ export default function Signup({ navigation }) {
           setPassword("");
           navigation.navigate("Restriction");
         } else {
-					if (typeof data.error == "object") {
-						createAlert(data.error[0].msg);
-					} else {
-						createAlert(data.error);
-					}					
-				}
+          if (typeof data.error == "object") {
+            createAlert(data.error[0].msg);
+          } else {
+            createAlert(data.error);
+          }
+        }
       });
   };
 
@@ -72,14 +73,23 @@ export default function Signup({ navigation }) {
         value={email}
         keyboardType="email-address"
       ></TextInput>
+      <View style={styles.passwordContainer}>
       <TextInput
-        style={styles.input}
+        style={styles.passwordInput}
         placeholder="Password"
         onChangeText={(value) => setPassword(value)}
         value={password}
-        secureTextEntry={true}
+        secureTextEntry={!showPassword}
         autoCapitalize={"none"}
-      ></TextInput>
+      >
+      </TextInput>
+      <TouchableOpacity
+          style={styles.showPasswordButton}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="grey" />
+        </TouchableOpacity>
+        </View>
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.button}
@@ -110,15 +120,33 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    backgroundColor: "white",
-    padding: 16,
-    width: "80%",
-    margin: 10,
-    borderWidth: 2,
-    borderColor: "#6DCD7D",
-    borderRadius: 10,
-    borderStyle: "solid",
-  },
+		backgroundColor: 'white',
+		padding: 16,
+		width: '80%',
+		margin: 10,
+		borderWidth: 2,
+		borderColor: '#6DCD7D',
+		borderRadius: 10,
+		borderStyle: 'solid',
+	},
+	passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '80%',
+        backgroundColor: 'white',
+        borderWidth: 2,
+        borderColor: '#6DCD7D',
+        borderRadius: 10,
+        margin: 10,
+		padding: 7,
+    },
+	passwordInput: {
+        flex: 1,
+        padding: 9,
+    },
+	showPasswordButton: {
+        padding: 10,
+    },
   button: {
     backgroundColor: "#1A6723",
     width: "80%",
