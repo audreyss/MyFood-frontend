@@ -3,68 +3,68 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addBookmark, removeBookmark } from "../reducers/user";
-
-
 import { AirbnbRating } from 'react-native-ratings';
-import { useSelector } from "react-redux";
 
 export default function Recipe({ navigation, route }) {
     const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
-    const dispatch = useDispatch();
-
     const { id } = route.params;
-    const [recipe, setRecipe] = useState(null);
-    const [isBookmarked, setIsBookmarked] = useState(false);
-
-    const [rating, setRating] = useState(0);
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
 
-    const handleRating = (rating) => {
-        fetch(`http://${IPADRESS}:3000` + '/ratings/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ token: user.token, id_recipe: recipe._id, rating}),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('API response:', data)
-                if (data?.result) {
-                    setRating(rating);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
+    const [recipe, setRecipe] = useState(null);
+    const [isBookmarked, setIsBookmarked] = useState(user.bookmarks.includes(id));
+    const [rating, setRating] = useState(0);
 
+    // use effect 
     useEffect(() => {
         fetch(`http://${IPADRESS}:3000` + '/recipes/recipe/' + id)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
                     setRecipe(data.recipe[0]);
-                    fetch(`http://${IPADRESS}:3000` + '/ratings/' + data.recipe[0]._id)
+                    setIsBookmarked(user.bookmarks.includes(data.recipe[0]._id));
+
+                    fetch(`http://${IPADRESS}:3000` + '/ratings/' + user.token)
                         .then(response => response.json())
-                        .then(data => {
-                            if (data?.result) {
-                                console.log(data);
-                                setRating(data.ratings.rating || 0);
+                        .then(ratingData => {
+                            if (ratingData?.result) {
+                                const ratingRes = ratingData.ratings.find(r => r.id_recipe === data.recipe[0]._id);
+                                ratingRes && setRating(ratingRes.rating);
                             }
                         })
+                        .catch(console.error)
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }, []);
+            .catch(console.error);
+    }, [id]);
 
-    useEffect(() => {
-        if (recipe) {
-            setIsBookmarked(user.bookmarks.includes(recipe._id));
+    // handleRating: for rating
+    const handleRating = (rating) => {
+        if (rating != 0) {
+            fetch(`http://${IPADRESS}:3000` + '/ratings/', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, recipe_id: recipe._id, rating }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    data?.result && setRating(rating);
+                })
+                .catch(console.error);
+        } else {
+            fetch(`http://${IPADRESS}:3000` + '/ratings/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, id_recipe: recipe._id, rating }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    data?.result && setRating(rating);
+                })
+                .catch(console.error);
         }
-    }, [recipe, user.bookmarks]);
+        
+    };
 
 
     // handlePressBookmark: handle press on bookmark icon
@@ -91,8 +91,20 @@ export default function Recipe({ navigation, route }) {
     }
 
     const colorBk = isBookmarked ? "#6DCD7D" : "black";
-    const bookmark = user.token ? <Icon name="bookmark" size={30} color={colorBk} style={styles.icon} onPress={handlePressBookmark} /> : [];
-
+    const bookmark = user.token ? <Icon name="bookmark" size={30} color={colorBk} style={styles.icon} onPress={handlePressBookmark} /> : null;
+    const ratings = user.token ? <AirbnbRating
+        type='custom'
+        count={5}
+        reviews={["Berk !", "Bad !", "OK !", "Miam !", "Delicious !"]}
+        defaultRating={rating}
+        size={20}
+        onFinishRating={handleRating}
+        reviewColor='#B4D4B9'
+        starContainerStyle={{ marginBottom: '10%' }}
+        unselectedColor='grey'
+        selectedColor='#B4D4B9'
+        reviewSize={15}
+    /> : null;
     const recipeContent = recipe && recipe.recipeContent.split('\n').map((instr, i) => <Text style={styles.text} key={i}>• {instr}</Text>)
 
 
@@ -135,19 +147,7 @@ export default function Recipe({ navigation, route }) {
                     <Text style={styles.textTitle}>Ready in minutes : {recipe.readyInMinutes}</Text>
                     {recipeContent}
                 </View>
-                <AirbnbRating
-                    type='custom'
-                    count={5}
-                    reviews={["Berk !", "Bad !", "OK !", "Miam !", "Delicious !"]}
-                    defaultRating={rating}
-                    size={20}
-                    onFinishRating={handleRating}
-                    reviewColor= '#B4D4B9'
-                    starContainerStyle={{ marginBottom: '10%' }}
-                    unselectedColor='grey'
-                    selectedColor='#B4D4B9'
-                    reviewSize={15}
-                    />
+                {ratings}
             </ScrollView>
         </View>
     )
