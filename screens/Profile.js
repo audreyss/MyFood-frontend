@@ -44,7 +44,7 @@ export default function Profile() {
             },
           ]);
         } else {
-          Alert.alert("Error", data.error[0].msg);
+          Alert.alert("Error", data.error);
         }
       })
       .catch((error) => {
@@ -73,7 +73,7 @@ export default function Profile() {
             },
           ]);
         } else {
-          Alert.alert("Error", data.error[0].msg);
+          Alert.alert("Error", data.error);
         }
       })
       .catch((error) => {
@@ -112,7 +112,7 @@ export default function Profile() {
             },
           ]);
         } else {
-          Alert.alert("Error", data.error[0].msg);
+          Alert.alert("Error", data.error);
         }
       })
       .catch((error) => {
