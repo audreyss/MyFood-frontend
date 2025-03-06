@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert } from "react-native";
 import { useDispatch } from "react-redux";
-import { login } from "../reducers/user";
+import { login, importBookmarks } from "../reducers/user";
 import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signin({ navigation }) {
@@ -28,11 +28,16 @@ export default function Signin({ navigation }) {
 		}).then(response => response.json())
 			.then(data => {
 				if (data.result) {
-					console.log(data)
-					dispatch(login({ token: data.token, username: data.username }));
-					setEmail('');
-					setPassword('')
-					navigation.navigate('Restriction')
+					fetch(`http://${IPADRESS}:3000/bookmarks/${data.token}`)
+						.then(response => response.json())
+						.then(dataBookmarks => {
+							dispatch(login({ token: data.token, username: data.username }));
+							const bookmarks = dataBookmarks.bookmarks.map(bk => bk.id_recipe);
+							dispatch(importBookmarks(bookmarks));
+							setEmail('');
+							setPassword('')
+							navigation.navigate('Restriction')
+						})
 				} else {
 					if (typeof data.error == "object") {
 						createAlert(data.error[0].msg);
@@ -119,23 +124,23 @@ const styles = StyleSheet.create({
 		borderStyle: 'solid',
 	},
 	passwordContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '80%',
-        backgroundColor: 'white',
-        borderWidth: 2,
-        borderColor: '#6DCD7D',
-        borderRadius: 10,
-        margin: 10,
+		flexDirection: 'row',
+		alignItems: 'center',
+		width: '80%',
+		backgroundColor: 'white',
+		borderWidth: 2,
+		borderColor: '#6DCD7D',
+		borderRadius: 10,
+		margin: 10,
 		padding: 7,
-    },
+	},
 	passwordInput: {
-        flex: 1,
-        padding: 9,
-    },
+		flex: 1,
+		padding: 9,
+	},
 	showPasswordButton: {
-        padding: 10,
-    },
+		padding: 10,
+	},
 	button: {
 		backgroundColor: '#1A6723',
 		width: '80%',
