@@ -5,16 +5,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { addBookmark, removeBookmark } from "../reducers/user";
 
 
+import { AirbnbRating } from 'react-native-ratings';
+import { useSelector } from "react-redux";
 
 export default function Recipe({ navigation, route }) {
     const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.value);
 
     const { id } = route.params;
     const [recipe, setRecipe] = useState(null);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
+    const [rating, setRating] = useState(0);
+    const user = useSelector((state) => state.user.value);
+
+    const handleRating = (rating) => {
+        fetch(`http://${IPADRESS}:3000` + '/ratings/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: user.token, id_recipe: recipe._id, rating}),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('API response:', data)
+                if (data?.result) {
+                    setRating(rating);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
     useEffect(() => {
         fetch(`http://${IPADRESS}:3000` + '/recipes/recipe/' + id)
@@ -22,8 +45,19 @@ export default function Recipe({ navigation, route }) {
             .then(data => {
                 if (data?.result) {
                     setRecipe(data.recipe[0]);
+                    fetch(`http://${IPADRESS}:3000` + '/ratings/' + data.recipe[0]._id)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data?.result) {
+                                console.log(data);
+                                setRating(data.ratings.rating || 0);
+                            }
+                        })
                 }
             })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }, []);
 
     useEffect(() => {
@@ -95,12 +129,25 @@ export default function Recipe({ navigation, route }) {
                         )
                     })}
                 </View>
-                <ScrollView style={styles.prepContainer}>
+                <View style={styles.prepContainer}>
                     <Text style={styles.casesTitle}>Preparation :</Text>
                     <Text style={styles.textTitle}>Number of servings : {recipe.numberOfServings}</Text>
                     <Text style={styles.textTitle}>Ready in minutes : {recipe.readyInMinutes}</Text>
                     {recipeContent}
-                </ScrollView>
+                </View>
+                <AirbnbRating
+                    type='custom'
+                    count={5}
+                    reviews={["Berk !", "Bad !", "OK !", "Miam !", "Delicious !"]}
+                    defaultRating={rating}
+                    size={20}
+                    onFinishRating={handleRating}
+                    reviewColor= '#B4D4B9'
+                    starContainerStyle={{ marginBottom: '10%' }}
+                    unselectedColor='grey'
+                    selectedColor='#B4D4B9'
+                    reviewSize={15}
+                    />
             </ScrollView>
         </View>
     )
@@ -122,17 +169,19 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         margin: '7%',
-        textShadowColor: 'green',
+        textShadowColor: '#B4D4B9',
         textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 10,
+        textShadowRadius: 5,
         fontFamily: 'inter',
         padding: '2%',
+        color: 'black',
     },
     casesTitle: {
         fontSize: 16,
         fontWeight: "bold",
         margin: "1%",
         fontFamily: 'inter',
+        color: '#B4D4B9',
     },
     text: {
         fontSize: 15,
