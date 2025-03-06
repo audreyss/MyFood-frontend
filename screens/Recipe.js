@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 export default function Recipe({ navigation, route }) {
     const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.value);
 
     const { id } = route.params;
     const [recipe, setRecipe] = useState(null);
