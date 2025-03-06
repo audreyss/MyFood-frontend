@@ -37,10 +37,10 @@ export default function Recipe({ navigation, route }) {
                     <Image source={{ uri: recipe.picture }} style={styles.image}></Image>
                     <View style={styles.nutContainer}>
                         <Text style={styles.casesTitle}>Nutritional information :</Text>
-                        <Text style={styles.textTitle}>calories : {recipe.calories}</Text>
-                        <Text style={styles.textTitle}>proteins : {recipe.proteins}</Text>
-                        <Text style={styles.textTitle}>glucides : {recipe.glucides}</Text>
-                        <Text style={styles.textTitle}>lipides : {recipe.lipides}</Text>
+                        <Text style={styles.textTitle}>- calories : {recipe.calories}</Text>
+                        <Text style={styles.textTitle}>- proteins : {recipe.proteins}</Text>
+                        <Text style={styles.textTitle}>- glucides : {recipe.glucides}</Text>
+                        <Text style={styles.textTitle}>- lipides : {recipe.lipides}</Text>
                     </View>
                 </View>
                 <View style={styles.prepContainer}>
@@ -48,7 +48,7 @@ export default function Recipe({ navigation, route }) {
                     {recipe.ingredients.map((ingredient, i) => {
                         return (
                             <Text key={i} style={styles.ingredientText}>
-                                {ingredient.name} {ingredient.quantity} {ingredient.unit}
+                               • {ingredient.name} {ingredient.quantity} {ingredient.unit}
                             </Text>
                         )
                     })}
@@ -76,33 +76,41 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     title: {
-        fontSize: 19,
+        fontSize: 20,
         fontWeight: "bold",
         textAlign: "center",
-        margin: '5%',
+        margin: '7%',
         textShadowColor: 'green',
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 10,
         fontFamily: 'inter',
+        padding: '2%',
     },
     casesTitle: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: "bold",
         margin: "1%",
         fontFamily: 'inter',
     },
     text: {
-        fontSize: 12,
+        fontSize: 15,
         fontWeight: "light",
         textAlign: 'justify',
-        margin: "1%",
+        margin: "2%",
+        borderTopWidth: 0.5,
+        borderTopColor: 'green',
+        paddingTop: '2%',
     },
     prepContainer: {
         margin: '3%',
+        borderTopWidth: 1,
+        borderTopColor: 'green',
+        paddingTop: '2%',
     },
     ingredientText: {
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: "light",
+        margin: "1%",
     },
     nutContainer: {
         margin: '5%',
@@ -111,20 +119,18 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     image: {
-        width: 300,
-        height: 200,
-        marginLeft: 10,
-        borderRadius: 10,
+        width: 370,
+        height: 240,
     },
     fisrtContainer: {
-        margin: '5%',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'stretch',
     },
     textTitle: {
-        fontSize: 13,
+        fontSize: 14,
         fontWeight: "semi-bold",
         margin: "1%",
+        fontStyle: 'italic',
     },
     icon: {
         position: 'absolute',
