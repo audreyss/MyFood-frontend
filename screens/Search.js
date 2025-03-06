@@ -9,6 +9,7 @@ export default function Search({ navigation }) {
     const user = useSelector((state) => state.user.value);
     const [recipes, setRecipes] = useState([]);
     const [dietOptions, setDietOptions] = useState([]);
+    const [searchInput, setSearchInput] = useState('');
 
     const dietIcons = [
         { name: 'muscleGain', img: require("../assets/barbell.png") },
@@ -18,6 +19,7 @@ export default function Search({ navigation }) {
         { name: 'vegetarian', img: require("../assets/vegeterian.png") }
     ];
 
+    // Use effect: mount
     useEffect(() => {
         fetch(`http://${IPADRESS}:3000` + '/recipes/all')
             .then(response => response.json())
@@ -28,33 +30,38 @@ export default function Search({ navigation }) {
             })
     }, []);
 
+    // Use effect: dietOptions or seachInput initialized or updated
     useEffect(() => {
         const dietsStr = dietOptions.join();
-        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + dietsStr)
+        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + dietsStr + '&name=' + searchInput)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
                     setRecipes(data.recipes)
                 }
             })
-    }, [dietOptions]);
+    }, [dietOptions, searchInput]);
 
-    const handlePress = (recipe) => {
-        navigation.navigate('Recipe', { id: recipe.id });
-    }
+    // handlePressIconSearch : handle press on search icons (add or remove a diet from dietOptions)
+    const handlePressIconSearch = (dietName) => {
+        if (dietOptions.includes(dietName)) {
+            setDietOptions(dietOptions.filter(diet => diet != dietName));
+        } else {
+            setDietOptions([...dietOptions, dietName]);
+        }
+    };
 
+    // recipesContent: array of recipe
     const recipesContent = recipes.map((recipe, i) => {
         const icons = dietIcons.filter(diet => recipe[diet.name])
             .map((diet, i) => (<Image key={i} style={styles.recipeImage} source={diet.img} alt={diet.name} />))
 
-        let bookmark = [];
-        if (user.token) {
-            bookmark = <Icon name="bookmark" size={20} color="black" style={styles.icon} />
-        }
-
+        
+        const bookmark = user.token ? <Icon name="bookmark" size={20} color="black" style={styles.icon} /> : [];
         const name = recipe.name.length > 25 ? recipe.name.slice(0, 22) + '...' : recipe.name;
+
         return (
-            <TouchableOpacity key={i} style={styles.recetteContainer} onPress={() => handlePress(recipe)}>
+            <TouchableOpacity key={i} style={styles.recetteContainer} onPress={() => navigation.navigate('Recipe', { id: recipe.id })}>
                 <View style={styles.iconsContainer}>
                     {icons}
                 </View>
@@ -66,22 +73,13 @@ export default function Search({ navigation }) {
         )
     })
 
-    const handlePressIconSearch = (dietName) => {
-        if (dietOptions.includes(dietName)) {
-            setDietOptions(dietOptions.filter(diet => diet != dietName));
-        } else {
-            setDietOptions([...dietOptions, dietName]);
-        }
-    };
-
+    // searchIcons: array of icons jsx for search option
     const searchIcons = dietIcons.map((diet, i) => {
-        let img = <Image style={styles.image} source={diet.img} alt={diet.name} onPress={() => handlePressIconSearch(diet.name)} />;
-        if (dietOptions.includes(diet.name)) {
-            img = <Image style={{ ...styles.image, backgroundColor: '#6DCD7D' }} source={diet.img} alt={diet.name} onPress={() => handlePressIconSearch(diet.name)} />
-        }
+        const styleIcon = dietOptions.includes(diet.name) ? {...styles.image, backgroundColor: '#6DCD7D'} : styles.image;
+
         return (
             <TouchableOpacity key={i} onPress={() => handlePressIconSearch(diet.name)}>
-                {img}
+                <Image style={styleIcon} source={diet.img} alt={diet.name} onPress={() => handlePressIconSearch(diet.name)} />
             </TouchableOpacity>
         )
     });
@@ -92,7 +90,7 @@ export default function Search({ navigation }) {
             <View style={styles.searchContainer}>
                 <View style={styles.inputContainer}>
                     <Icon name="search" size={20} color="grey" style={styles.icon} />
-                    <TextInput placeholder="Search" ></TextInput>
+                    <TextInput style={styles.textInput} placeholder="Search" onChangeText={value => setSearchInput(value)} value={searchInput}></TextInput>
                 </View>
                 <View style={styles.imageContainer}>
                     {searchIcons}
@@ -183,5 +181,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignSelf: 'center',
         width: '100%'
+    },
+    textInput: {
+        width: '95%',
     }
 })
