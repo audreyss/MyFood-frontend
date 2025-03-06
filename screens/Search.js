@@ -24,11 +24,14 @@ export default function Search({ navigation }) {
 
     // Use effect: mount
     useEffect(() => {
-        fetch(`http://${IPADRESS}:3000` + '/recipes/all')
+        const diets = user.diet ? user.diet : ''
+        
+        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + diets)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
                     setRecipes(data.recipes)
+                    user && setDietOptions([user.diet])
                 }
             })
     }, []);
@@ -78,7 +81,7 @@ export default function Search({ navigation }) {
     }
 
     // recipesContent: array of recipe
-    const recipesContent = recipes.map((recipe, i) => {
+    const recipesContent = recipes.length == 0 ? <Text style={styles.loading}>Loading...</Text> : recipes.map((recipe, i) => {
         const icons = dietIcons.filter(diet => recipe[diet.name])
             .map((diet, i) => (<Image key={i} style={styles.recipeImage} source={diet.img} alt={diet.name} />))
 
