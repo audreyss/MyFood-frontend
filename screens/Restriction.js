@@ -102,22 +102,22 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	logo: {
-		marginTop: '20%',
+		marginTop: '10%',
 	},
 	title: {
 		fontFamily: 'inter',
-		fontSize: 30,
+		fontSize: 20,
 		fontWeight: 'medium',
-		margin: 60,
+		margin: 40,
 		textAlign: 'center',
 		paddingLeft: 10,
-		textShadowColor: 'green',
+		textShadowColor: '#B4D4B9',
 		textShadowOffset: { width: 2, height: 2 },
 		textShadowRadius: 1,
 	},
 	username: {
 		fontWeight: 'bold',
-		fontSize: 30,
+		fontSize: 25,
 		fontStyle: 'italic',
 	},
 	allButtons: {
