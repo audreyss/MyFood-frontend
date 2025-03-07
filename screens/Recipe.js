@@ -121,6 +121,7 @@ export default function Recipe({ navigation, route }) {
             <ScrollView style={styles.container}>
                 {bookmark}
                 <Text style={styles.title}>{recipe.name}</Text>
+                {ratings}
                 <View style={styles.fisrtContainer}>
                     <Image source={{ uri: recipe.picture }} style={styles.image}></Image>
                     <View style={styles.nutContainer}>
@@ -147,7 +148,6 @@ export default function Recipe({ navigation, route }) {
                     <Text style={styles.textTitle}>Ready in minutes : {recipe.readyInMinutes}</Text>
                     {recipeContent}
                 </View>
-                {ratings}
             </ScrollView>
         </View>
     )
