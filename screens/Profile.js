@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { logout } from "../reducers/user";
+import SavedRecipes from "./SavedRecipes";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -25,6 +26,13 @@ export default function Profile() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [bookmarksOpen, setBookmarksOpen] = useState(true);
+
+
+  const handleClickTab = (tab) => {
+    console.log('click', bookmarksOpen);
+    tab == 'bookmarks' ? setBookmarksOpen(true) : setBookmarksOpen(false);
+  }
 
   {
     /* ----------------UPDATE PASSWORD--------------- */
@@ -86,7 +94,7 @@ export default function Profile() {
   }
   const handleLogout = () => {
     dispatch(logout());
-    navigation.navigate("Signin");
+    navigation.reset({ index: 0, routes: [{ name: "Signin" }] });
   };
   {
     /* ----------------DELETE ACCOUNT--------------- */
@@ -265,13 +273,14 @@ export default function Profile() {
         <Text style={styles.myProfile}>Profile</Text>
       </View>
       <View style={styles.navBar}>
-        <TouchableOpacity>
-          <Text style={styles.navBarText}>Saved recipes</Text>
+        <TouchableOpacity onPress={() => handleClickTab('bookmarks')}>
+          {bookmarksOpen ? <Text style={[styles.navBarText, styles.activeLink]}>Saved recipes</Text> : <Text style={styles.navBarText}>Saved recipes</Text>}
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={[styles.navBarText, styles.activeLink]}>Settings</Text>
+        <TouchableOpacity onPress={() => handleClickTab('settings')}>
+          {!bookmarksOpen ? <Text style={[styles.navBarText, styles.activeLink]}>Settings</Text> : <Text style={styles.navBarText}>Settings</Text>}
         </TouchableOpacity>
       </View>
+      {bookmarksOpen ? <SavedRecipes /> : (<>
       <View>
         <TouchableOpacity style={[styles.dietbtn, styles.active]}>
           <Image
@@ -308,28 +317,28 @@ export default function Profile() {
           <Text style={styles.dietText}>Vegetarian</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.allButtons}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.text} onPress={() => setModalChangeEmail(true)}>
-            Edit mail
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setModalChangePassword(true)}
-        >
-          <Text style={styles.text}>Edit password</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setModalDeleteAccount(true)}
-        >
-          <Text style={styles.text}>Delete account</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleLogout}>
-          <Text style={styles.text}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.allButtons}>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.text} onPress={() => setModalChangeEmail(true)}>
+              Edit mail
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setModalChangePassword(true)}
+          >
+            <Text style={styles.text}>Edit password</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setModalDeleteAccount(true)}
+          >
+            <Text style={styles.text}>Delete account</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogout}>
+            <Text style={styles.text}>Logout</Text>
+          </TouchableOpacity>
+        </View></>)}
     </View>
   );
 }
@@ -472,47 +481,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-
-{
-  /* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your password"
-              secureTextEntry={true}
-              onChangeText={(text) => setPassword(text)}
-              value={password}
-            />
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonCancel]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonConfirm]}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                  handleDeleteAccount();
-                  setPassword("");
-                }}
-              >
-                <Text style={styles.textStyle}>Confirm</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal> */
-}
