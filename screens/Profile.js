@@ -360,6 +360,7 @@ const styles = StyleSheet.create({
 	},
 
 	myProfile: {
+		marginTop: '5%',
 		fontSize: 30,
 		fontWeight: "bold",
 		fontFamily: "inter",
