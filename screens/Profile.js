@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image, Alert, Modal, TextInput, } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { logout } from "../reducers/user";
+import { logout, toggleDiet } from "../reducers/user";
 import SavedRecipes from "./SavedRecipes";
-import { addDiet } from "../reducers/user";
 
 export default function Profile() {
 	const dispatch = useDispatch();
@@ -54,7 +53,7 @@ export default function Profile() {
 			.then(response => response.json())
 			.then(data => {
 				if (data.result) {
-					dispatch(addDiet(diet.prop));
+					dispatch(toggleDiet(diet.prop));
 				} else {
 					createAlert(data.error);
 				}
@@ -64,7 +63,7 @@ export default function Profile() {
 	}
 
 	const dietsContent = diets.map((diet, i) => {
-		const styleButton = user.diet.includes(diet.prop) ? [styles.dietbtn, styles.active] : styles.dietbtn;
+		const styleButton = user.diets.includes(diet.prop) ? [styles.dietbtn, styles.active] : styles.dietbtn;
 		return (
 			<TouchableOpacity key={i} style={styleButton} onPress={() => handlePress(diet)}>
 				<Image source={dietIcons[diet.prop]} style={styles.icon} />

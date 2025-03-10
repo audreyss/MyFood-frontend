@@ -11,7 +11,7 @@ export default function Search({ navigation }) {
     const user = useSelector((state) => state.user.value);
 
     const [recipes, setRecipes] = useState([]);
-    const [dietOptions, setDietOptions] = useState([]);
+    const [dietOptions, setDietOptions] = useState([...user.diets]);
     const [searchInput, setSearchInput] = useState('');
 
     const dietIcons = [
@@ -22,19 +22,18 @@ export default function Search({ navigation }) {
         { name: 'vegetarian', img: require("../assets/vegeterian.png") }
     ];
 
-    // Use effect: mount
+    // Use effect: user.diets init or updated
     useEffect(() => {
-        const diets = user.diet ? user.diet : ''
-        
-        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + diets)
+        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + user.diets.join(',') + '&name=' + searchInput)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
                     setRecipes(data.recipes)
-                    user && setDietOptions([user.diet])
+                    setDietOptions([...user.diets])
                 }
             })
-    }, [user.diet]);
+
+    }, [user.diets]);
 
     // Use effect: dietOptions or seachInput initialized or updated
     useEffect(() => {

@@ -23,29 +23,17 @@ export default function Regime() {
 			.then(response => response.json())
 			.then(data => {
 				if (data?.result) {
-          const diet = data.diets.find(diet => diet.prop == user.diet);
-					setDiet(diet);
+          const diets = data.diets.filter(diet => user.diets.includes(diet.prop));
+					setDiet(diets[0]);
 				}
 			})
   }, [user.diet])
 
 
-  let yesImage = <FontAwesome name="thumbs-o-up" size={40} color="#6DCD7D" />;
-  let noImage = <FontAwesome name="thumbs-o-down" size={40} color="grey" />;
-  let content = diet?.yes.map((food, i) => {
-    return <Text key={i}>{food}</Text>;
-  });
-  if (!isActive) {
-    yesImage = <FontAwesome name="thumbs-o-up" size={40} color="grey" />;
-    noImage = <FontAwesome name="thumbs-o-down" size={40} color="#6DCD7D" />;
-    content = diet?.no.map((food, i) => {
-      return (
-        <Text key={i} style={styles.food}>
-          {food}
-        </Text>
-      );
-    });
-  }
+  const yesImage = isActive ? <FontAwesome name="thumbs-o-up" size={40} color="#6DCD7D" /> : <FontAwesome name="thumbs-o-up" size={40} color="grey" />;
+  const noImage = isActive ? <FontAwesome name="thumbs-o-down" size={40} color="grey" /> : <FontAwesome name="thumbs-o-down" size={40} color="#6DCD7D" />;
+  const content = isActive ? diet?.yes.map((food, i) => <Text key={i}>{food}</Text>) : diet?.no.map((food, i) => <Text key={i}>{food}</Text>);
+  
 
   if (!diet) {
     return (<View style={styles.container}>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert } from "react-native";
 import { useDispatch } from "react-redux";
-import { login, importBookmarks, addDiet } from "../reducers/user";
+import { login, importBookmarks, toggleDiet, importDiets } from "../reducers/user";
 import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signin({ navigation }) {
@@ -39,8 +39,9 @@ export default function Signin({ navigation }) {
 							const bookmarks = dataBookmarks.bookmarks.map(bk => bk.id_recipe);
 							dispatch(importBookmarks(bookmarks));
 							// dispatch user diet
-							const diet = fields.find(field => data[field])
-							dispatch(addDiet(diet));
+							const userDiets = fields.filter(field => data[field])
+							dispatch(importDiets(userDiets));
+							
 							setEmail('');
 							setPassword('');
 							navigation.navigate('TabNavigator', { screen: 'Regime' });
