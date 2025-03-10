@@ -40,7 +40,7 @@ export default function Restriction({ navigation }) {
 	const handlePress = (diet) => {
 		if (!user.token) {
 			dispatch(addDiet(diet.prop));
-			navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet, dietIcons } });
+			navigation.navigate('TabNavigator', { screen: 'Regime'});
 		} else {
 			fetch(`http://${IPADRESS}:3000` + '/users/diet/' + user.token, {
 				method: 'PUT',
@@ -51,7 +51,7 @@ export default function Restriction({ navigation }) {
 				.then(data => {
 					if (data.result) {
 						dispatch(addDiet(diet.prop));
-						navigation.navigate('TabNavigator', { screen: 'Regime', params: { diet, dietIcons } });
+						navigation.navigate('TabNavigator', { screen: 'Regime'});
 					} else {
 						createAlert(data.error);
 					}
