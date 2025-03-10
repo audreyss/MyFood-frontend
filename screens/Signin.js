@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: 'medium',
 		margin: 5,
+		fontStyle: 'italic',
 	},
 	input: {
 		backgroundColor: 'white',
