@@ -1,33 +1,56 @@
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, } from "react-native";
+import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-export default function Regime({ navigation, route }) {
+export default function Regime() {
+  const user = useSelector((state) => state.user.value);
+	const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
+
   const [isActive, setIsActive] = useState(true);
-  const { diet, dietIcons } = route.params;
+  const [diet, setDiet] = useState(null);
+
+  const dietIcons = {
+    muscleGain: require("../assets/barbell.png"),
+    healthy: require("../assets/scale.png"),
+    glutenFree: require("../assets/no-gluten.png"),
+    pregnant: require("../assets/pregnant.png"),
+    vegetarian: require("../assets/vegeterian.png")
+  };
+
+  useEffect(() => {
+    fetch(`http://${IPADRESS}:3000` + '/diets')
+			.then(response => response.json())
+			.then(data => {
+				if (data?.result) {
+          const diet = data.diets.find(diet => diet.prop == user.diet);
+					setDiet(diet);
+				}
+			})
+  }, [user.diet])
+
 
   let yesImage = <FontAwesome name="thumbs-o-up" size={40} color="#6DCD7D" />;
   let noImage = <FontAwesome name="thumbs-o-down" size={40} color="grey" />;
-  let content = diet.yes.map((food, i) => {
+  let content = diet?.yes.map((food, i) => {
     return <Text key={i}>{food}</Text>;
   });
   if (!isActive) {
     yesImage = <FontAwesome name="thumbs-o-up" size={40} color="grey" />;
     noImage = <FontAwesome name="thumbs-o-down" size={40} color="#6DCD7D" />;
-    content = diet.no.map((food, i) => {
+    content = diet?.no.map((food, i) => {
       return (
         <Text key={i} style={styles.food}>
           {food}
         </Text>
       );
     });
+  }
+
+  if (!diet) {
+    return (<View style={styles.container}>
+      <Text>Loading...</Text>
+    </View>)
   }
 
   return (
