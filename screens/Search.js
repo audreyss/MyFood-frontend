@@ -13,6 +13,7 @@ export default function Search({ navigation }) {
     const [recipes, setRecipes] = useState([]);
     const [dietOptions, setDietOptions] = useState([...user.diets]);
     const [searchInput, setSearchInput] = useState('');
+    const [searchIngredient, setSearchIngredient] = useState('');
     const [page, setPage] = useState(1);
 
     const dietIcons = [
@@ -25,7 +26,7 @@ export default function Search({ navigation }) {
 
     // Use effect: user.diets init or updated
     useEffect(() => {
-        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + user.diets.join(',') + '&name=' + searchInput)
+        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + user.diets.join(',') + '&name=' + searchInput + '&ingredients=' + searchIngredient)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
@@ -39,7 +40,7 @@ export default function Search({ navigation }) {
     // Use effect: dietOptions or seachInput initialized or updated
     useEffect(() => {
         const dietsStr = dietOptions.join();
-        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + dietsStr + '&name=' + searchInput)
+        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + dietsStr + '&name=' + searchInput + '&ingredients=' + searchIngredient)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
@@ -126,7 +127,11 @@ export default function Search({ navigation }) {
             <View style={styles.searchContainer}>
                 <View style={styles.inputContainer}>
                     <Icon name="search" size={20} color="grey" style={styles.icon} />
-                    <TextInput style={styles.textInput} placeholder="Search" onChangeText={value => setSearchInput(value)} value={searchInput}></TextInput>
+                    <TextInput style={styles.textInput} placeholder="Search by name" onChangeText={value => setSearchInput(value)} value={searchInput}></TextInput>
+                </View>
+                <View style={styles.inputContainer}>
+                    <Icon name="search" size={20} color="grey" style={styles.icon} />
+                    <TextInput style={styles.textInput} placeholder="Search by ingredient (separated by comma)" onChangeText={value => setSearchIngredient(value)} value={searchIngredient}></TextInput>
                 </View>
                 <View style={styles.imageContainer}>
                     {searchIcons}
@@ -149,6 +154,8 @@ export default function Search({ navigation }) {
 const styles = StyleSheet.create({
     searchContainer: {
         backgroundColor: '#EDF9EF',
+        paddingTop: '3%',
+        gap: '5%',
     },
     inputContainer: {
         flexDirection: 'row',
@@ -157,7 +164,6 @@ const styles = StyleSheet.create({
         paddingLeft: '5%',
         backgroundColor: 'white',
         width: '90%',
-        marginTop: '10%',
         marginLeft: '5%',
         borderWidth: 2,
         borderColor: '#6DCD7D',
@@ -169,9 +175,7 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         flexDirection: 'row',
-        marginTop: '2%',
         marginLeft: '5%',
-        marginBottom: '5%',
     },
     image: {
         width: 50,
@@ -181,7 +185,7 @@ const styles = StyleSheet.create({
         borderColor: '#6DCD7D',
         borderRadius: 10,
         borderStyle: 'solid',
-        margin: 5,
+        marginHorizontal: 5,
     },
     textInput: {
         width: '95%',
