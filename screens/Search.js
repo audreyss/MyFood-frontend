@@ -251,8 +251,9 @@ const styles = StyleSheet.create({
     loadMoreText: {
         fontFamily: 'inter',
         fontWeight: '900',
-        fontSize: 25,
+        fontSize: 20,
         color: 'black',
-        fontStyle: 'italic'
+        fontStyle: 'italic',
+        textDecorationLine: 'underline',
     }
 })

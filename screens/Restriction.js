@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image, Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
