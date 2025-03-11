@@ -47,7 +47,7 @@ export default function Search({ navigation }) {
                     setRecipes(data.recipes)
                 }
             })
-    }, [dietOptions, searchInput]);
+    }, [dietOptions, searchInput, searchIngredient]);
 
     // handlePressIconSearch : handle press on search icons (add or remove a diet from dietOptions)
     const handlePressIconSearch = (dietName) => {
