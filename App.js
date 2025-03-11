@@ -29,16 +29,17 @@ const store = configureStore({
 const persistor = persistStore(store);
 
 const TabNavigator = () => {
-
   const user = useSelector((state) => state.user.value);
-  const isUserLoggedIn = user.token ? <Tab.Screen name="Profile" component={Profile} /> : null;
+  const isUserLoggedIn = user.token ? (
+    <Tab.Screen name="Profile" component={Profile} />
+  ) : null;
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
-          if (route.name === "Regime") {
+          if (route.name === "Diets") {
             iconName = "heart";
           } else if (route.name === "Search") {
             iconName = "search";
@@ -52,7 +53,7 @@ const TabNavigator = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Regime" component={Regime} />
+      <Tab.Screen name="Diets" component={Regime} />
       <Tab.Screen name="Search" component={Search} />
       {isUserLoggedIn}
     </Tab.Navigator>
@@ -60,7 +61,6 @@ const TabNavigator = () => {
 };
 
 export default function App() {
-
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
