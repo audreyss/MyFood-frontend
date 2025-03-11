@@ -1,7 +1,6 @@
 import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SavedRecipes() {

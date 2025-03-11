@@ -14,7 +14,6 @@ import Regime from "./screens/Regime";
 import Search from "./screens/Search";
 import Recipe from "./screens/Recipe";
 import Profile from "./screens/Profile";
-import Settings from "./screens/Settings";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
 
@@ -72,7 +71,6 @@ export default function App() {
             <Stack.Screen name="Restriction" component={Restriction} />
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
             <Stack.Screen name="Recipe" component={Recipe} />
-            <Stack.Screen name="Settings" component={Settings} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

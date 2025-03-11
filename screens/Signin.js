@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert, Image } from "react-native";
 import { useDispatch } from "react-redux";
-import { login, importBookmarks, toggleDiet, importDiets } from "../reducers/user";
+import { login, importBookmarks, importDiets } from "../reducers/user";
 import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signin({ navigation }) {
