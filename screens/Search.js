@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         width: 150,
         height: 150,
         borderRadius: 10,
-        margin: 10,
+        margin: 5,
     },
     recetteContainer: {
         flex: 1,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
-        padding: 10,
+        padding: 2,
     },
     recetteContent: {
         width: '45%',
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
         right: 120,
         top: '10%',
         backgroundColor: '#EDF9EF',
-        padding: 5,
+        padding: 2,
         borderWidth: 2,
     },
     icons: {
