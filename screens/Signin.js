@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert } from "react-native";
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert, Image } from "react-native";
 import { useDispatch } from "react-redux";
 import { login, importBookmarks, toggleDiet, importDiets } from "../reducers/user";
 import { FontAwesome } from "react-native-vector-icons";
@@ -41,7 +41,7 @@ export default function Signin({ navigation }) {
 							// dispatch user diet
 							const userDiets = fields.filter(field => data[field])
 							dispatch(importDiets(userDiets));
-							
+
 							setEmail('');
 							setPassword('');
 							navigation.navigate('TabNavigator', { screen: 'Regime' });
@@ -81,6 +81,15 @@ export default function Signin({ navigation }) {
 			<TouchableOpacity activeOpacity={0.8} style={styles.button}>
 				<Text style={styles.textButton} onPress={() => handleConnection()}>Connect</Text>
 			</TouchableOpacity>
+			<View style={styles.horizontalLineWrapper}>
+				<View style={styles.horizontalLine}></View>
+				<Text style={styles.borderText} >Or</Text>
+				<View style={styles.horizontalLine}></View>
+			</View>
+			<TouchableOpacity activeOpacity={0.8} style={styles.googleButton}>
+				<Image source={require('../assets/img.icons8.png')} style={styles.gStyle}></Image>
+				<Text style={styles.textButton} >Connect with Google</Text>
+			</TouchableOpacity>
 			<View style={styles.link}>
 				<TouchableOpacity >
 					<Text style={styles.textLink} onPress={() => navigation.navigate('Signup')} >Create an account</Text>
@@ -103,16 +112,16 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 80,
 		fontWeight: 'bold',
-		fontFamily: 'inter',
+		fontFamily: 'Inter',
 		textShadowColor: 'green',
 		textShadowOffset: { width: 2, height: 2 },
 		textShadowRadius: 10,
 		margin: 50,
 	},
 	connectionText: {
-		fontFamily: 'inter',
+		fontFamily: 'Inter',
 		fontWeight: 'bold',
-		fontSize: 16,
+		fontSize: 20,
 		margin: 10,
 	},
 	text: {
@@ -170,5 +179,37 @@ const styles = StyleSheet.create({
 		padding: 30,
 		fontFamily: 'inter',
 		fontWeight: 'bold',
-	}
+		fontSize: 15,
+		textDecorationLine: 'underline',
+	},
+	googleButton: {
+		backgroundColor: '#1A6723',
+		width: '80%',
+		padding: 16,
+		borderRadius: 10,
+		margin: 10,
+		flexDirection: 'row',
+		justifyContent: 'center',
+	},
+	gStyle: {
+		height: 25,
+		width: 25,
+		marginRight: '3%',
+	},
+	borderText: {
+		paddingHorizontal: 10,
+		paddingVertical: '2%',
+		fontSize: 16,
+		fontWeight: 'bold',
+	},
+	horizontalLineWrapper: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	  },
+	  horizontalLine: {
+		height: 2,
+		backgroundColor: '#6DCD7D',
+		flex: 0.38, 
+		width: '20%'
+	  },
 })
