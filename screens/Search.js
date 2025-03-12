@@ -6,7 +6,6 @@ import { addBookmark, removeBookmark } from "../reducers/user";
 
 
 export default function Search({ navigation }) {
-    const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
 
@@ -61,7 +60,7 @@ export default function Search({ navigation }) {
     // handlePressBookmark: handle press on bookmark icon
     const handlePressBookmark = (recipe) => {
         if (user.bookmarks.includes(recipe.id)) {
-            fetch(`https://my-food-backend.vercel.app/`, {
+            fetch(`https://my-food-backend.vercel.app/bookmarks/`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, recipe_id: recipe.id })
@@ -70,7 +69,7 @@ export default function Search({ navigation }) {
                     data.result && dispatch(removeBookmark(recipe.id));
                 })
         } else {
-            fetch(`https://my-food-backend.vercel.app/`, {
+            fetch(`https://my-food-backend.vercel.app/bookmarks/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, recipe_id: recipe.id })
@@ -82,7 +81,7 @@ export default function Search({ navigation }) {
     }
 
     // recipesContent: array of recipe
-    const recipesContent = recipes.length == 0 ? <Text style={styles.loading}>Loading...</Text> : recipes.slice(0, page * 25).map((recipe, i) => {
+    const recipesContent = recipes.length == 0 ? <Text style={styles.loading}>No recipe found</Text> : recipes.slice(0, page * 25).map((recipe, i) => {
         const icons = dietIcons.filter(diet => recipe[diet.name])
             .map((diet, i) => (<Image key={i} style={styles.recipeImage} source={diet.img} alt={diet.name} />))
 
@@ -123,7 +122,7 @@ export default function Search({ navigation }) {
     };
 
     return (
-        <>
+        <View style={styles.firstContainer}>
             <View style={styles.searchContainer}>
                 <View style={styles.inputContainer}>
                     <Icon name="search" size={20} color="grey" style={styles.icon} />
@@ -147,11 +146,15 @@ export default function Search({ navigation }) {
                     </TouchableOpacity>
                 )}
             </ScrollView>
-        </>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+    firstContainer: {
+        flex: 3,
+        backgroundColor: '#EDF9EF',
+    },
     searchContainer: {
         backgroundColor: '#EDF9EF',
         paddingTop: '3%',

@@ -5,7 +5,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function Regime() {
   const user = useSelector((state) => state.user.value);
-  const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 
   const [isActive, setIsActive] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);

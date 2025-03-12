@@ -6,16 +6,17 @@ import {
   Text,
   StyleSheet,
   Image,
-  Alert
+  Alert,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView
 } from "react-native";
 import { login } from "../reducers/user";
 import { useDispatch } from "react-redux";
 import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signup({ navigation }) {
-
   const dispatch = useDispatch();
-  const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,52 +53,58 @@ export default function Signup({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("../assets/bonhome.jpg")}
-      ></Image>
-      <Text style={styles.text}>
-        Create an account to save your restrictions and favorite recipes!
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={(value) => setUsername(value)}
-        value={username}
-      ></TextInput>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={(value) => setEmail(value)}
-        value={email}
-        keyboardType="email-address"
-      ></TextInput>
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.passwordInput}
-          placeholder="Password"
-          onChangeText={(value) => setPassword(value)}
-          value={password}
-          secureTextEntry={!showPassword}
-          autoCapitalize={"none"}
-        >
-        </TextInput>
-        <TouchableOpacity
-          style={styles.showPasswordButton}
-          onPress={() => setShowPassword(!showPassword)}
-        >
-          <FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="grey" />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={styles.button}
-        onPress={() => addUser()}
-      >
-        <Text style={styles.textButton}>Register</Text>
-      </TouchableOpacity>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <ScrollView>
+        <View style={styles.container}>
+          <Image
+            style={styles.image}
+            source={require("../assets/bonhome.jpg")}
+          ></Image>
+          <Text style={styles.text}>
+            Create an account to save your restrictions and favorite recipes!
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            onChangeText={(value) => setUsername(value)}
+            value={username}
+          ></TextInput>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            onChangeText={(value) => setEmail(value)}
+            value={email}
+            keyboardType="email-address"
+          ></TextInput>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="Password"
+              onChangeText={(value) => setPassword(value)}
+              value={password}
+              secureTextEntry={!showPassword}
+              autoCapitalize={"none"}
+            >
+            </TextInput>
+            <TouchableOpacity
+              style={styles.showPasswordButton}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="grey" />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.button}
+            onPress={() => addUser()}
+          >
+            <Text style={styles.textButton}>Register</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

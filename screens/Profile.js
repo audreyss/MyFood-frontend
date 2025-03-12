@@ -8,7 +8,6 @@ import SavedRecipes from "./SavedRecipes";
 export default function Profile() {
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 	const user = useSelector((state) => state.user.value);
 	const token = useSelector((state) => state.user.value.token);
 	const [modalDeleteAccount, setModalDeleteAccount] = useState(false);

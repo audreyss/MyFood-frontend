@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function SavedRecipes() {
     const navigation = useNavigation();
-    const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
     const user = useSelector((state) => state.user.value);
     const [bookmarks, setBookmarks] = useState([]);
 
