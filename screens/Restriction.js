@@ -1,13 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { TouchableOpacity, View, Text, StyleSheet, Image, Alert } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, Image, Alert, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDiet } from "../reducers/user";
 
 
 
 export default function Restriction({ navigation }) {
-	const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 	const dispatch = useDispatch();
 	const username = useSelector((state) => state.user.value.username);
 	const user = useSelector((state) => state.user.value);
@@ -92,12 +91,14 @@ export default function Restriction({ navigation }) {
 			<View >
 				{connected()}
 			</View>
-			<View style={styles.allButtons}>
-				{dietsContent}
-			</View>
-			<TouchableOpacity style={styles.button} onPress={handlePressContinue}>
-				<Text style={styles.textBtn}>Continue</Text>
-			</TouchableOpacity>
+			<ScrollView style={styles.scrollView}>
+				<View style={styles.allButtons}>
+					{dietsContent}
+					<TouchableOpacity style={styles.button} onPress={handlePressContinue}>
+						<Text style={styles.textBtn}>Continue</Text>
+					</TouchableOpacity>
+				</View>
+			</ScrollView>
 		</View>
 	);
 }
@@ -107,6 +108,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#eff9f0",
 		alignItems: "center",
+	},
+	scrollView: {
+		height: '100%',
+		width: '100%'
 	},
 	logo: {
 		marginTop: '5%',

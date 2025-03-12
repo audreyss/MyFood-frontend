@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert, Image } from "react-native";
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, Alert, Image, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
 import { useDispatch } from "react-redux";
 import { login, importBookmarks, importDiets } from "../reducers/user";
 import { FontAwesome } from "react-native-vector-icons";
 
 export default function Signin({ navigation }) {
 	const dispatch = useDispatch();
-	const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -57,48 +56,54 @@ export default function Signin({ navigation }) {
 	}
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>MyFood</Text>
-			<Text style={styles.connectionText}>Connection</Text>
-			<Text style={styles.text}>Set your email and password</Text>
-			<TextInput placeholder="Email" style={styles.input} onChangeText={(value) => setEmail(value)} value={email} keyboardType="email-address"></TextInput>
-			<View style={styles.passwordContainer}>
-				<TextInput
-					placeholder="Password"
-					style={styles.passwordInput}
-					onChangeText={(value) => setPassword(value)}
-					value={password}
-					secureTextEntry={!showPassword}
-					autoCapitalize={"none"}>
-				</TextInput>
-				<TouchableOpacity
-					style={styles.showPasswordButton}
-					onPress={() => setShowPassword(!showPassword)}
-				>
-					<FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="grey" />
-				</TouchableOpacity>
-			</View>
-			<TouchableOpacity activeOpacity={0.8} style={styles.button}>
-				<Text style={styles.textButton} onPress={() => handleConnection()}>Connect</Text>
-			</TouchableOpacity>
-			<View style={styles.horizontalLineWrapper}>
-				<View style={styles.horizontalLine}></View>
-				<Text style={styles.borderText} >Or</Text>
-				<View style={styles.horizontalLine}></View>
-			</View>
-			<TouchableOpacity activeOpacity={0.8} style={styles.googleButton}>
-				<Image source={require('../assets/img.icons8.png')} style={styles.gStyle}></Image>
-				<Text style={styles.textButton} >Connect with Google</Text>
-			</TouchableOpacity>
-			<View style={styles.link}>
-				<TouchableOpacity >
-					<Text style={styles.textLink} onPress={() => navigation.navigate('Signup')} >Create an account</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => navigation.navigate('Restriction')}>
-					<Text style={styles.textLink}>Continue without account</Text>
-				</TouchableOpacity>
-			</View>
-		</View>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+			style={styles.container}>
+			<ScrollView style={styles.scrollview}>
+				<View style={styles.container}>
+					<Text style={styles.title}>MyFood</Text>
+					<Text style={styles.connectionText}>Connection</Text>
+					<Text style={styles.text}>Set your email and password</Text>
+					<TextInput placeholder="Email" style={styles.input} onChangeText={(value) => setEmail(value)} value={email} keyboardType="email-address"></TextInput>
+					<View style={styles.passwordContainer}>
+						<TextInput
+							placeholder="Password"
+							style={styles.passwordInput}
+							onChangeText={(value) => setPassword(value)}
+							value={password}
+							secureTextEntry={!showPassword}
+							autoCapitalize={"none"}>
+						</TextInput>
+						<TouchableOpacity
+							style={styles.showPasswordButton}
+							onPress={() => setShowPassword(!showPassword)}
+						>
+							<FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="grey" />
+						</TouchableOpacity>
+					</View>
+					<TouchableOpacity activeOpacity={0.8} style={styles.button}>
+						<Text style={styles.textButton} onPress={() => handleConnection()}>Connect</Text>
+					</TouchableOpacity>
+					<View style={styles.horizontalLineWrapper}>
+						<View style={styles.horizontalLine}></View>
+						<Text style={styles.borderText} >Or</Text>
+						<View style={styles.horizontalLine}></View>
+					</View>
+					<TouchableOpacity activeOpacity={0.8} style={styles.googleButton}>
+						<Image source={require('../assets/img.icons8.png')} style={styles.gStyle}></Image>
+						<Text style={styles.textButton} >Connect with Google</Text>
+					</TouchableOpacity>
+					<View style={styles.link}>
+						<TouchableOpacity >
+							<Text style={styles.textLink} onPress={() => navigation.navigate('Signup')} >Create an account</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => navigation.navigate('Restriction')}>
+							<Text style={styles.textLink}>Continue without account</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</ScrollView>
+		</KeyboardAvoidingView>
 	)
 }
 
@@ -108,6 +113,10 @@ const styles = StyleSheet.create({
 		backgroundColor: '#EDF9EF',
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	scrollview: {
+		height: '100%',
+		width: '100%'
 	},
 	title: {
 		fontSize: 80,
@@ -205,11 +214,11 @@ const styles = StyleSheet.create({
 	horizontalLineWrapper: {
 		flexDirection: 'row',
 		alignItems: 'center',
-	  },
-	  horizontalLine: {
+	},
+	horizontalLine: {
 		height: 2,
 		backgroundColor: '#6DCD7D',
-		flex: 0.38, 
+		flex: 0.38,
 		width: '20%'
-	  },
+	},
 })

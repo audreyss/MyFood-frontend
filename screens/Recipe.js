@@ -6,7 +6,6 @@ import { addBookmark, removeBookmark } from "../reducers/user";
 import { AirbnbRating } from 'react-native-ratings';
 
 export default function Recipe({ navigation, route }) {
-    const IPADRESS = process.env.EXPO_PUBLIC_IP_ADDRESS;
     const { id } = route.params;
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
