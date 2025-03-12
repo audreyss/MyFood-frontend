@@ -57,7 +57,7 @@ export default function Signin({ navigation }) {
 
 	return (
 		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+			behavior='position' keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
 			style={styles.container}>
 			<ScrollView style={styles.scrollview}>
 				<View style={styles.container}>
