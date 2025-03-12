@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, View, Text, StyleSheet, Image, Alert, Modal, TextInput, } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, Image, Alert, Modal, TextInput, ScrollView, } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { logout, toggleDiet } from "../reducers/user";
@@ -317,32 +317,34 @@ export default function Profile() {
 					{!bookmarksOpen ? <Text style={[styles.navBarText, styles.activeLink]}>Settings</Text> : <Text style={styles.navBarText}>Settings</Text>}
 				</TouchableOpacity>
 			</View>
-			{bookmarksOpen ? <SavedRecipes /> : (<>
-				<View>
-					{dietsContent}
-				</View>
-				<View style={styles.allButtons}>
-					<TouchableOpacity style={styles.button}>
-						<Text style={styles.text} onPress={() => setModalChangeEmail(true)}>
-							Edit mail
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.button}
-						onPress={() => setModalChangePassword(true)}
-					>
-						<Text style={styles.text}>Edit password</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.button}
-						onPress={() => setModalDeleteAccount(true)}
-					>
-						<Text style={styles.text}>Delete account</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.button} onPress={handleLogout}>
-						<Text style={styles.text}>Logout</Text>
-					</TouchableOpacity>
-				</View></>)}
+			{bookmarksOpen ? <SavedRecipes /> : (
+				<ScrollView style={styles.scrollview}>
+					<View style={{alignItems: 'center'}}>
+						{dietsContent}
+					</View>
+					<View style={styles.allButtons}>
+						<TouchableOpacity style={styles.button}>
+							<Text style={styles.text} onPress={() => setModalChangeEmail(true)}>
+								Edit mail
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.button}
+							onPress={() => setModalChangePassword(true)}
+						>
+							<Text style={styles.text}>Edit password</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.button}
+							onPress={() => setModalDeleteAccount(true)}
+						>
+							<Text style={styles.text}>Delete account</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.button} onPress={handleLogout}>
+							<Text style={styles.text}>Logout</Text>
+						</TouchableOpacity>
+					</View>
+				</ScrollView>)}
 		</View>
 	);
 }
@@ -356,7 +358,10 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		gap: 30,
 	},
-
+	scrollview: {
+		height: '100%',
+		width: '100%'
+	},
 	myProfile: {
 		marginTop: '5%',
 		fontSize: 30,
@@ -385,6 +390,7 @@ const styles = StyleSheet.create({
 	allButtons: {
 		alignItems: "center",
 		width: "100%",
+		marginVertical: 20,
 	},
 	button: {
 		alignItems: "center",
