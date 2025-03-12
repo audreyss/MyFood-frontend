@@ -28,7 +28,7 @@ export default function Signup({ navigation }) {
   };
 
   const addUser = () => {
-    fetch(`http://${IPADRESS}:3000/users/signup`, {
+    fetch(`https://my-food-backend.vercel.app/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),

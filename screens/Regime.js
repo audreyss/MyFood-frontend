@@ -22,7 +22,7 @@ export default function Regime() {
 
 
   useEffect(() => {
-    fetch(`http://${IPADRESS}:3000` + '/diets')
+    fetch(`https://my-food-backend.vercel.app` + '/diets')
       .then(response => response.json())
       .then(data => {
         if (data?.result) {

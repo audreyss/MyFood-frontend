@@ -23,14 +23,14 @@ export default function Signin({ navigation }) {
 
 	const handleConnection = () => {
 
-		fetch(`http://${IPADRESS}:3000/users/signin`, {
+		fetch(`https://my-food-backend.vercel.app/users/signin`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password }),
 		}).then(response => response.json())
 			.then(data => {
 				if (data.result) {
-					fetch(`http://${IPADRESS}:3000/bookmarks/${data.token}`)
+					fetch(`https://my-food-backend.vercel.app/bookmarks/${data.token}`)
 						.then(response => response.json())
 						.then(dataBookmarks => {
 							// dispatch user login and token

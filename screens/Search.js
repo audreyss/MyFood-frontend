@@ -26,7 +26,7 @@ export default function Search({ navigation }) {
 
     // Use effect: user.diets init or updated
     useEffect(() => {
-        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + user.diets.join(',') + '&name=' + searchInput + '&ingredients=' + searchIngredient)
+        fetch(`https://my-food-backend.vercel.app` + '/recipes/search?diets=' + user.diets.join(',') + '&name=' + searchInput + '&ingredients=' + searchIngredient)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
@@ -40,7 +40,7 @@ export default function Search({ navigation }) {
     // Use effect: dietOptions or seachInput initialized or updated
     useEffect(() => {
         const dietsStr = dietOptions.join();
-        fetch(`http://${IPADRESS}:3000` + '/recipes/search?diets=' + dietsStr + '&name=' + searchInput + '&ingredients=' + searchIngredient)
+        fetch(`https://my-food-backend.vercel.app` + '/recipes/search?diets=' + dietsStr + '&name=' + searchInput + '&ingredients=' + searchIngredient)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
@@ -61,7 +61,7 @@ export default function Search({ navigation }) {
     // handlePressBookmark: handle press on bookmark icon
     const handlePressBookmark = (recipe) => {
         if (user.bookmarks.includes(recipe.id)) {
-            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+            fetch(`https://my-food-backend.vercel.app/`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, recipe_id: recipe.id })
@@ -70,7 +70,7 @@ export default function Search({ navigation }) {
                     data.result && dispatch(removeBookmark(recipe.id));
                 })
         } else {
-            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+            fetch(`https://my-food-backend.vercel.app/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, recipe_id: recipe.id })

@@ -17,14 +17,14 @@ export default function Recipe({ navigation, route }) {
 
     // use effect 
     useEffect(() => {
-        fetch(`http://${IPADRESS}:3000` + '/recipes/recipe/' + id)
+        fetch(`https://my-food-backend.vercel.app/` + '/recipes/recipe/' + id)
             .then(response => response.json())
             .then(data => {
                 if (data?.result) {
                     setRecipe(data.recipe[0]);
                     setIsBookmarked(user.bookmarks.includes(data.recipe[0]._id));
 
-                    fetch(`http://${IPADRESS}:3000` + '/ratings/' + user.token)
+                    fetch(`https://my-food-backend.vercel.app/` + '/ratings/' + user.token)
                         .then(response => response.json())
                         .then(ratingData => {
                             if (ratingData?.result) {
@@ -41,7 +41,7 @@ export default function Recipe({ navigation, route }) {
     // handleRating: for rating
     const handleRating = (rating) => {
         if (rating != 0) {
-            fetch(`http://${IPADRESS}:3000` + '/ratings/', {
+            fetch(`https://my-food-backend.vercel.app/` + '/ratings/', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, recipe_id: recipe._id, rating }),
@@ -52,7 +52,7 @@ export default function Recipe({ navigation, route }) {
                 })
                 .catch(console.error);
         } else {
-            fetch(`http://${IPADRESS}:3000` + '/ratings/', {
+            fetch(`https://my-food-backend.vercel.app/` + '/ratings/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, id_recipe: recipe._id, rating }),
@@ -70,7 +70,7 @@ export default function Recipe({ navigation, route }) {
     // handlePressBookmark: handle press on bookmark icon
     const handlePressBookmark = () => {
         if (user.bookmarks.includes(recipe._id)) {
-            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+            fetch(`https://my-food-backend.vercel.app/bookmarks/`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, recipe_id: recipe._id })
@@ -79,7 +79,7 @@ export default function Recipe({ navigation, route }) {
                     data.result && dispatch(removeBookmark(recipe._id)) && setIsBookmarked(false);
                 })
         } else {
-            fetch(`http://${IPADRESS}:3000/bookmarks/`, {
+            fetch(`https://my-food-backend.vercel.app/bookmarks/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: user.token, recipe_id: recipe._id })

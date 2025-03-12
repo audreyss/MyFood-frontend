@@ -20,7 +20,7 @@ export default function SavedRecipes() {
 
     // Use effect: mount
     useEffect(() => {
-        fetch(`http://${IPADRESS}:3000` + '/bookmarks/infos/' + user.token)
+        fetch(`https://my-food-backend.vercel.app` + '/bookmarks/infos/' + user.token)
             .then(response => response.json())
             .then(data => {
                 data.result && setBookmarks(data.bookmarks);

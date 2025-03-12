@@ -31,7 +31,7 @@ export default function Profile() {
 
 
 	useEffect(() => {
-		fetch(`http://${IPADRESS}:3000` + '/diets')
+		fetch('https://my-food-backend.vercel.app/diets')
 			.then(response => response.json())
 			.then(data => {
 				if (data?.result) {
@@ -45,7 +45,7 @@ export default function Profile() {
 	}
 
 	const handlePress = (diet) => {
-		fetch(`http://${IPADRESS}:3000` + '/users/diet/' + user.token, {
+		fetch('https://my-food-backend.vercel.app/users/diet/' + user.token, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ field: diet.prop }),
@@ -76,7 +76,7 @@ export default function Profile() {
 		/* ----------------UPDATE PASSWORD--------------- */
 	}
 	const handleUpdatePassword = () => {
-		fetch(`http://${IPADRESS}:3000/users/password/${token}`, {
+		fetch(`https://my-food-backend.vercel.app/users/password/${token}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ oldPassword, newPassword }),
@@ -105,7 +105,7 @@ export default function Profile() {
 	}
 
 	const handleUpdateEmail = () => {
-		fetch(`http://${IPADRESS}:3000/users/email/${token}`, {
+		fetch(`https://my-food-backend.vercel.app/users/email/${token}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ email }), // Send the new email in the request body
@@ -138,7 +138,7 @@ export default function Profile() {
 		/* ----------------DELETE ACCOUNT--------------- */
 	}
 	const handleDeleteAccount = () => {
-		fetch(`http://${IPADRESS}:3000/users/${token}`, {
+		fetch(`https://my-food-backend.vercel.app/users/${token}`, {
 			method: "DELETE",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ password }),

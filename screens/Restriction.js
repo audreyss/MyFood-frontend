@@ -14,7 +14,7 @@ export default function Restriction({ navigation }) {
 	const [diets, setDiets] = useState([]);
 
 	useEffect(() => {
-		fetch(`http://${IPADRESS}:3000` + '/diets')
+		fetch(`https://my-food-backend.vercel.app` + '/diets')
 			.then(response => response.json())
 			.then(data => {
 				if (data?.result) {
@@ -47,7 +47,7 @@ export default function Restriction({ navigation }) {
 			return;
 		}
 		const fieldsBody = user.diets.join(',');
-		fetch(`http://${IPADRESS}:3000` + '/users/diets/' + user.token, {
+		fetch(`https://my-food-backend.vercel.app` + '/users/diets/' + user.token, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ fields: fieldsBody }),
