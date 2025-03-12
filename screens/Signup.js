@@ -58,7 +58,7 @@ export default function Signup({ navigation }) {
         source={require("../assets/bonhome.jpg")}
       ></Image>
       <Text style={styles.text}>
-        Ceate an account to save your restrictions and favorite recipes!
+        Create an account to save your restrictions and favorite recipes!
       </Text>
       <TextInput
         style={styles.input}
@@ -74,22 +74,22 @@ export default function Signup({ navigation }) {
         keyboardType="email-address"
       ></TextInput>
       <View style={styles.passwordContainer}>
-      <TextInput
-        style={styles.passwordInput}
-        placeholder="Password"
-        onChangeText={(value) => setPassword(value)}
-        value={password}
-        secureTextEntry={!showPassword}
-        autoCapitalize={"none"}
-      >
-      </TextInput>
-      <TouchableOpacity
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Password"
+          onChangeText={(value) => setPassword(value)}
+          value={password}
+          secureTextEntry={!showPassword}
+          autoCapitalize={"none"}
+        >
+        </TextInput>
+        <TouchableOpacity
           style={styles.showPasswordButton}
           onPress={() => setShowPassword(!showPassword)}
         >
           <FontAwesome name={showPassword ? "eye-slash" : "eye"} size={20} color="grey" />
         </TouchableOpacity>
-        </View>
+      </View>
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.button}
@@ -113,44 +113,44 @@ const styles = StyleSheet.create({
     height: 160,
   },
   text: {
-      fontFamily: 'inter',
-      fontSize: 20,
-      fontWeight: 'medium',
-      margin: 40,
-      textAlign: 'center',
-      paddingLeft: 10,
-      textShadowColor: '#B4D4B9',
-      textShadowOffset: { width: 2, height: 2 },
-      textShadowRadius: 1,
+    fontFamily: 'inter',
+    fontSize: 20,
+    fontWeight: 'medium',
+    margin: 40,
+    textAlign: 'center',
+    paddingLeft: 10,
+    textShadowColor: '#B4D4B9',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 1,
   },
   input: {
-		backgroundColor: 'white',
-		padding: 16,
-		width: '80%',
-		margin: 10,
-		borderWidth: 2,
-		borderColor: '#6DCD7D',
-		borderRadius: 10,
-		borderStyle: 'solid',
-	},
-	passwordContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '80%',
-        backgroundColor: 'white',
-        borderWidth: 2,
-        borderColor: '#6DCD7D',
-        borderRadius: 10,
-        margin: 10,
-		padding: 7,
-    },
-	passwordInput: {
-        flex: 1,
-        padding: 9,
-    },
-	showPasswordButton: {
-        padding: 10,
-    },
+    backgroundColor: 'white',
+    padding: 16,
+    width: '80%',
+    margin: 10,
+    borderWidth: 2,
+    borderColor: '#6DCD7D',
+    borderRadius: 10,
+    borderStyle: 'solid',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: '#6DCD7D',
+    borderRadius: 10,
+    margin: 10,
+    padding: 7,
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 9,
+  },
+  showPasswordButton: {
+    padding: 10,
+  },
   button: {
     backgroundColor: "#1A6723",
     width: "80%",
