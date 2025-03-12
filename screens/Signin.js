@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
 		width: '100%'
 	},
 	title: {
-		fontSize: 80,
+		fontSize: 70,
 		fontWeight: 'bold',
 		fontFamily: 'Inter',
 		textShadowColor: 'green',
 		textShadowOffset: { width: 2, height: 2 },
 		textShadowRadius: 10,
-		margin: 50,
+		margin: '10%',
 	},
 	connectionText: {
 		fontFamily: 'Inter',

@@ -6,221 +6,225 @@ import { logout, toggleDiet } from "../reducers/user";
 import SavedRecipes from "./SavedRecipes";
 
 export default function Profile() {
-	const dispatch = useDispatch();
-	const navigation = useNavigation();
-	const user = useSelector((state) => state.user.value);
-	const token = useSelector((state) => state.user.value.token);
-	const [modalDeleteAccount, setModalDeleteAccount] = useState(false);
-	const [modalChangeEmail, setModalChangeEmail] = useState(false);
-	const [modalChangePassword, setModalChangePassword] = useState(false);
-	const [password, setPassword] = useState("");
-	const [oldPassword, setOldPassword] = useState("");
-	const [newPassword, setNewPassword] = useState("");
-	const [email, setEmail] = useState("");
-	const [bookmarksOpen, setBookmarksOpen] = useState(true);
-	const [diets, setDiets] = useState([]);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const user = useSelector((state) => state.user.value);
+  const token = useSelector((state) => state.user.value.token);
+  const [modalDeleteAccount, setModalDeleteAccount] = useState(false);
+  const [modalChangeEmail, setModalChangeEmail] = useState(false);
+  const [modalChangePassword, setModalChangePassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [bookmarksOpen, setBookmarksOpen] = useState(true);
+  const [diets, setDiets] = useState([]);
 
-	const dietIcons = {
-		muscleGain: require("../assets/barbell.png"),
-		healthy: require("../assets/scale.png"),
-		glutenFree: require("../assets/no-gluten.png"),
-		pregnant: require("../assets/pregnant.png"),
-		vegetarian: require("../assets/vegeterian.png")
-	};
+  const dietIcons = {
+    muscleGain: require("../assets/barbell.png"),
+    healthy: require("../assets/scale.png"),
+    glutenFree: require("../assets/no-gluten.png"),
+    pregnant: require("../assets/pregnant.png"),
+    vegetarian: require("../assets/vegeterian.png"),
+  };
 
+  useEffect(() => {
+    fetch("https://my-food-backend.vercel.app/diets")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data?.result) {
+          setDiets(data.diets);
+        }
+      });
+  }, []);
 
-	useEffect(() => {
-		fetch('https://my-food-backend.vercel.app/diets')
-			.then(response => response.json())
-			.then(data => {
-				if (data?.result) {
-					setDiets(data.diets)
-				}
-			})
-	}, []);
+  const handleClickTab = (tab) => {
+    tab == "bookmarks" ? setBookmarksOpen(true) : setBookmarksOpen(false);
+  };
 
-	const handleClickTab = (tab) => {
-		tab == 'bookmarks' ? setBookmarksOpen(true) : setBookmarksOpen(false);
-	}
+  const handlePress = (diet) => {
+    fetch("https://my-food-backend.vercel.app/users/diet/" + user.token, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ field: diet.prop }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(toggleDiet(diet.prop));
+        } else {
+          createAlert(data.error);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
 
-	const handlePress = (diet) => {
-		fetch('https://my-food-backend.vercel.app/users/diet/' + user.token, {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ field: diet.prop }),
-		})
-			.then(response => response.json())
-			.then(data => {
-				if (data.result) {
-					dispatch(toggleDiet(diet.prop));
-				} else {
-					createAlert(data.error);
-				}
-			})
-			.catch(error => console.error(error));
+  const dietsContent = diets.map((diet, i) => {
+    const styleButton = user.diets.includes(diet.prop)
+      ? [styles.dietbtn, styles.active]
+      : styles.dietbtn;
+    return (
+      <TouchableOpacity
+        key={i}
+        style={styleButton}
+        onPress={() => handlePress(diet)}
+      >
+        <Image source={dietIcons[diet.prop]} style={styles.icon} />
+        <Text style={styles.dietText}>{diet.name}</Text>
+      </TouchableOpacity>
+    );
+  });
 
-	}
+  {
+    /* ----------------UPDATE PASSWORD--------------- */
+  }
+  const handleUpdatePassword = () => {
+    fetch(`https://my-food-backend.vercel.app/users/password/${token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ oldPassword, newPassword }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert("Success", "Your password has been updated.", [
+            {
+              text: "OK",
+            },
+          ]);
+        } else {
+          Alert.alert("Error", data.error);
+        }
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Error",
+          "Failed to update password. Please try again later."
+        );
+      });
+  };
+  {
+    /* ----------------UPDATE EMAIL--------------- */
+  }
 
-	const dietsContent = diets.map((diet, i) => {
-		const styleButton = user.diets.includes(diet.prop) ? [styles.dietbtn, styles.active] : styles.dietbtn;
-		return (
-			<TouchableOpacity key={i} style={styleButton} onPress={() => handlePress(diet)}>
-				<Image source={dietIcons[diet.prop]} style={styles.icon} />
-				<Text style={styles.dietText}>{diet.name}</Text>
-			</TouchableOpacity>
-		)
-	})
+  const handleUpdateEmail = () => {
+    fetch(`https://my-food-backend.vercel.app/users/email/${token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }), // Send the new email in the request body
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert("Success", "Your email has been updated.", [
+            {
+              text: "OK", //button of confirmation !
+            },
+          ]);
+        } else {
+          Alert.alert("Error", data.error);
+        }
+      })
+      .catch((error) => {
+        Alert.alert("Error", "Failed to update email. Please try again later.");
+      });
+  };
 
-	{
-		/* ----------------UPDATE PASSWORD--------------- */
-	}
-	const handleUpdatePassword = () => {
-		fetch(`https://my-food-backend.vercel.app/users/password/${token}`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ oldPassword, newPassword }),
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.result) {
-					Alert.alert("Success", "Your password has been updated.", [
-						{
-							text: "OK",
-						},
-					]);
-				} else {
-					Alert.alert("Error", data.error);
-				}
-			})
-			.catch((error) => {
-				Alert.alert(
-					"Error",
-					"Failed to update password. Please try again later."
-				);
-			});
-	};
-	{
-		/* ----------------UPDATE EMAIL--------------- */
-	}
+  {
+    /* ----------------LOGOUT--------------- */
+  }
+  const handleLogout = () => {
+    dispatch(logout());
+    navigation.reset({ index: 0, routes: [{ name: "Signin" }] });
+  };
+  {
+    /* ----------------DELETE ACCOUNT--------------- */
+  }
+  const handleDeleteAccount = () => {
+    fetch(`https://my-food-backend.vercel.app/users/${token}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert("Success", "Your account has been deleted.", [
+            {
+              text: "OK",
+              onPress: () => {
+                // Change the user state in reducer to null
+                dispatch(logout());
+                // Navigate to the Signin page
+                navigation.navigate("Signin");
+              },
+            },
+          ]);
+        } else {
+          Alert.alert("Error", data.error);
+        }
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Error",
+          "Failed to delete account. Please try again later."
+        );
+      });
+  };
 
-	const handleUpdateEmail = () => {
-		fetch(`https://my-food-backend.vercel.app/users/email/${token}`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ email }), // Send the new email in the request body
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.result) {
-					Alert.alert("Success", "Your email has been updated.", [
-						{
-							text: "OK", //button of confirmation
-						},
-					]);
-				} else {
-					Alert.alert("Error", data.error);
-				}
-			})
-			.catch((error) => {
-				Alert.alert("Error", "Failed to update email. Please try again later.");
-			});
-	};
+  return (
+    <View style={styles.container}>
+      {/* ----------------MODAL EDIT PASSWORD--------------- */}
 
-	{
-		/* ----------------LOGOUT--------------- */
-	}
-	const handleLogout = () => {
-		dispatch(logout());
-		navigation.reset({ index: 0, routes: [{ name: "Signin" }] });
-	};
-	{
-		/* ----------------DELETE ACCOUNT--------------- */
-	}
-	const handleDeleteAccount = () => {
-		fetch(`https://my-food-backend.vercel.app/users/${token}`, {
-			method: "DELETE",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ password }),
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.result) {
-					Alert.alert("Success", "Your account has been deleted.", [
-						{
-							text: "OK",
-							onPress: () => {
-								// Change the user state in reducer to null
-								dispatch(logout());
-								// Navigate to the Signin page
-								navigation.navigate("Signin");
-							},
-						},
-					]);
-				} else {
-					Alert.alert("Error", data.error);
-				}
-			})
-			.catch((error) => {
-				Alert.alert(
-					"Error",
-					"Failed to delete account. Please try again later."
-				);
-			});
-	};
-
-	return (
-		<View style={styles.container}>
-			{/* ----------------MODAL EDIT PASSWORD--------------- */}
-
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalChangePassword}
-				onRequestClose={() => {
-					setModalChangePassword(!modalChangePassword);
-				}}
-			>
-				<View style={styles.centeredView}>
-					<View style={styles.modalView}>
-						<Text style={styles.modalText}>
-							Please enter your old password and new password to update
-						</Text>
-						<TextInput
-							style={styles.input}
-							placeholder="Old password"
-							secureTextEntry={true}
-							onChangeText={(text) => setOldPassword(text)}
-							value={oldPassword}
-						/>
-						<TextInput
-							style={styles.input}
-							placeholder="New password"
-							secureTextEntry={true}
-							onChangeText={(text) => setNewPassword(text)}
-							value={newPassword}
-						/>
-						<View style={styles.modalButtons}>
-							<TouchableOpacity
-								style={[styles.button, styles.buttonCancel]}
-								onPress={() => setModalChangePassword(!modalChangePassword)}
-							>
-								<Text style={styles.textStyle}>Cancel</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={[styles.button, styles.buttonConfirm]}
-								onPress={() => {
-									setModalChangePassword(!modalChangePassword);
-									handleUpdatePassword();
-									setOldPassword("");
-									setNewPassword("");
-								}}
-							>
-								<Text style={styles.textStyle}>Confirm</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
-			</Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalChangePassword}
+        onRequestClose={() => {
+          setModalChangePassword(!modalChangePassword);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Please enter your old password and new password to update
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Old password"
+              secureTextEntry={true}
+              onChangeText={(text) => setOldPassword(text)}
+              value={oldPassword}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="New password"
+              secureTextEntry={true}
+              onChangeText={(text) => setNewPassword(text)}
+              value={newPassword}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonCancel]}
+                onPress={() => setModalChangePassword(!modalChangePassword)}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonConfirm]}
+                onPress={() => {
+                  setModalChangePassword(!modalChangePassword);
+                  handleUpdatePassword();
+                  setOldPassword("");
+                  setNewPassword("");
+                }}
+              >
+                <Text style={styles.textStyle}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
 			{/* ----------------MODAL EDIT EMAIL--------------- */}
 			<Modal
