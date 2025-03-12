@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 		width: '100%'
 	},
 	title: {
-		fontSize: 65,
+		fontSize: 60,
 		fontWeight: 'bold',
 		fontFamily: 'Inter',
 		textShadowColor: 'green',
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
 		margin: 10,
 	},
 	textLink: {
-		padding: 30,
+		padding: '6%',
 		fontFamily: 'inter',
 		fontWeight: 'bold',
 		fontSize: 15,
