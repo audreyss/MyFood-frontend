@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     recipeImage: {
         width: 25,
         height: 25,
-        margin: '2%',
+        margin: '1%',
     },
     recetteContainer: {
         flex: 1,
@@ -72,10 +72,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
-        padding: 10,
+        padding: 5,
     },
     recetteContent: {
-        width: '45%',
         margin: 5,
         padding: 5,
         borderRadius: 10,
